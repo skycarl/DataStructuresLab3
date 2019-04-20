@@ -99,7 +99,6 @@ public class Main {
             System.exit(1);
         }
 
-        // TODO remove this test print area
 
 
         // TODO return custom object for frequency table
