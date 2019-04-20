@@ -9,8 +9,11 @@
  * @since 2019-04-19
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -31,8 +34,8 @@ public class Main {
 
         // Load file names into variables
         String freqTableFilename = args[0];
-        String encodedTextFilename = args[1];
-        String clearTextFilename = args[2];
+        String clearTextFilename  = args[1];
+        String encodedTextFilename = args[2];
 
         // Create file objects
 
@@ -41,13 +44,17 @@ public class Main {
 
         // Read in the ClearText file
         try {
-            importFreqTable(freqTableFilename)
+            importFreqTable(freqTableFilename);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // Create scanner objects
 
         Scanner encodedTextScanner = new Scanner(System.in);
         Scanner clearTextScanner = new Scanner(System.in);
+
+        System.out.println("Program exiting...");
     }
 
     /**
@@ -68,7 +75,8 @@ public class Main {
         try {
             // Create the file and scanner objects
             File freqTableFile = new File(filename);
-            Scanner freqTableScanner = new Scanner(freqTableFile);
+            //Scanner freqTableScanner = new Scanner(freqTableFile);
+            Scanner freqTableScanner = new Scanner(new BufferedReader(new FileReader(freqTableFile)));
 
             // Read the file line by line
             while (freqTableScanner.hasNext()) {
@@ -77,6 +85,8 @@ public class Main {
                 // Split on possible delimiter options
                 tempLineArray = tempLine.split("([ :\\-ñ])+");
                 //line.split("( |:|-|ñ)+"); // Original version in case above doesn't work
+                System.out.println(Arrays.toString(tempLineArray));
+                System.out.println("reading line...");
             }
             freqTableScanner.close();
 
