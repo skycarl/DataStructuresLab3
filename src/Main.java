@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Main {
@@ -65,6 +66,25 @@ public class Main {
         // Split encodedText on \u00A0 character to put into an array
         String encodedArray[] = encodedText.toString().split("\\u00A0");
         //System.out.println(Arrays.toString(encodedArray));
+
+        // Create a priority queue of FreqTreeNode objects
+        //PriorityQueue nodeQueue = new PriorityQueue(26, )
+        PriorityQueue<FreqTreeNode> nodeQueue = new PriorityQueue<FreqTreeNode>();
+
+        // Add elements to the Priority Queue
+        for (int i = 0; i < 26; i++) {
+            nodeQueue.add(freqTable[i]);
+        }
+
+        // Test print area
+        // TODO remove
+        //System.out.println("Priority queue: " + nodeQueue);
+        while (!nodeQueue.isEmpty()) {
+            System.out.println(nodeQueue.remove());
+        }
+
+        // Build the Huffman tree based on the frequency table
+
 
 
         //System.out.println(encodedText.toString());
