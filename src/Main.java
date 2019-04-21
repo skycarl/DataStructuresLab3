@@ -34,24 +34,73 @@ public class Main {
         String clearTextFilename  = args[1];
         String encodedTextFilename = args[2];
 
-        // Create file objects
-
-        File encodedTextFile = new File(encodedTextFilename);
-        File clearTextFile = new File(clearTextFilename);
-
-        // Read in the ClearText file
+        // Read in the Frequency table file
+        FreqTableEntry[] freqTable = new FreqTableEntry[26];
         try {
-            importFreqTable(freqTableFilename);
+            freqTable = importFreqTable(freqTableFilename);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Create scanner objects
+        // Read in the clear text file
+        StringBuilder clearText = new StringBuilder();
+        try {
+            clearText = importClearText(clearTextFilename);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Scanner encodedTextScanner = new Scanner(System.in);
-        Scanner clearTextScanner = new Scanner(System.in);
+
+
 
         System.out.println("Program exiting...");
+    }
+
+    /**
+     * This method imports the clear text file.
+     * @param clearTextFilename The name of the file containing the clear text.
+     * @return clearText        StringBuilder object of the clear text.
+     */
+    private static StringBuilder importClearText(String clearTextFilename) {
+
+        StringBuilder clearText = new StringBuilder();
+        String tempLine;
+
+        try {
+            // Create the file and scanner objects
+            File freqTableFile = new File(clearTextFilename);
+            Scanner freqTableScanner = new Scanner(
+                new BufferedReader(new FileReader(freqTableFile)));
+
+            // Read the file line by line
+            while (freqTableScanner.hasNextLine()) {
+                tempLine = freqTableScanner.nextLine();
+
+                // Clean up any non alphanumeric characters from the string
+                //TODO finish cleaning up dagger character
+                tempLine = tempLine.replaceAll("^[a-zA-Z0-9]+$", "");
+
+                // Convert all characters to uppercase for easier processing
+                // TODO finish this
+
+
+                // Append temp line to the StringBuilder
+                clearText.append(tempLine);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // Clean the string up by replacing any non-numeric characters
+        //clearText = clearText.replaceAll("^[a-zA-Z0-9]+$", "");
+
+
+        // Convert to uppercase for easier processing
+
+
+        System.out.println(clearText.toString());
+        return clearText;
     }
 
     /**
