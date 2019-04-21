@@ -11,7 +11,6 @@ public class FreqTableEntry {
   private char character;
   private int frequency;
 
-
   /**
    * This is the constructor for the frequency table entry
    * @param character   The character to be stored.
@@ -22,12 +21,10 @@ public class FreqTableEntry {
     this.frequency = frequency;
   }
 
-
   /**
    * This toString method prints the value for easy viewing.
    */
   public String toString() {
     return character + " : " + frequency;
   }
-
 }

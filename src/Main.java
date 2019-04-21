@@ -13,14 +13,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        System.out.println("Hello World!");
 
         // Verify filenames are specified
         if (args.length != 3) {
@@ -63,22 +60,18 @@ public class Main {
      * @param filename      The name of the file containing the frequency table.
      * @return freqTable    The frequency table, stored in an array of Strings.
      */
-    private static void importFreqTable(String filename) {
+    private static FreqTableEntry[] importFreqTable(String filename) {
 
         FreqTableEntry[] freqTable = new FreqTableEntry[26];
         String tempLine;
         String[] tempLineArray;
         int tempFreqVal;
         char tempChar;
-        //FreqTableEntry tempFreqTableEntry;
-
-
-
+        int i = 0;
 
         try {
             // Create the file and scanner objects
             File freqTableFile = new File(filename);
-            //Scanner freqTableScanner = new Scanner(freqTableFile);
             Scanner freqTableScanner = new Scanner(new BufferedReader(new FileReader(freqTableFile)));
 
             // Read the file line by line
@@ -90,7 +83,7 @@ public class Main {
                     continue;
                 }
 
-                // Split on possible delimiter options
+                // Split on some possible delimiter options
                 tempLineArray = tempLine.split("([ :\\-ñ])+");
 
                 // TODO improve this logic, if there's time
@@ -113,14 +106,15 @@ public class Main {
                 // Add values to freqTableEntry object
                 FreqTableEntry tempFreqTableEntry = new FreqTableEntry(tempChar, tempFreqVal);
 
-                // Temp print freqtable entry
-                System.out.println(tempFreqTableEntry.toString());
+                // Store tempFreqTableEntry into array
+                freqTable[i] = tempFreqTableEntry;
+                i++;
 
+                // TODO remove temp print freqtable entry
+                System.out.println(tempFreqTableEntry.toString());
 
             }
             freqTableScanner.close();
-
-            // Split the tempLineArray into the frequency table class
         }
 
         catch (FileNotFoundException fileExc) {
@@ -129,9 +123,6 @@ public class Main {
             System.exit(1);
         }
 
-
-
-        // TODO return custom object for frequency table
-        //return freqTable;
+        return freqTable;
     }
 }
