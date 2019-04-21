@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -50,10 +51,57 @@ public class Main {
             e.printStackTrace();
         }
 
+        // Split encodedText on \u00A0 character to put into an array
+        String clearTextArray[] = clearText.toString().split("\\u00A0");
+        System.out.println(Arrays.toString(clearTextArray));
+
+        // Read in the encoded file
+        StringBuilder encodedText = null;
+        try {
+            encodedText = importEncodedText(encodedTextFilename);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Split encodedText on \u00A0 character to put into an array
+        String encodedArray[] = encodedText.toString().split("\\u00A0");
+        System.out.println(Arrays.toString(encodedArray));
+
+
+        //System.out.println(encodedText.toString());
+
 
 
 
         System.out.println("Program exiting...");
+    }
+
+    private static StringBuilder importEncodedText(String encodedTextFilename) {
+
+        StringBuilder encodedText = new StringBuilder();
+        String tempLine;
+
+        try {
+            // Create the file and scanner objects
+            File freqTableFile = new File(encodedTextFilename);
+            Scanner freqTableScanner = new Scanner(
+                new BufferedReader(new FileReader(freqTableFile)));
+
+            // Read the file line by line
+            while (freqTableScanner.hasNextLine()) {
+                tempLine = freqTableScanner.nextLine();
+
+                // Append temp line to the StringBuilder
+                encodedText.append(tempLine);
+
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        return encodedText;
     }
 
     /**
@@ -80,7 +128,7 @@ public class Main {
                 tempLine = tempLine.replaceAll("[\\p{P}|\\s]", "");
 
                 // Remove weird whitespace from string
-                tempLine = tempLine.replaceAll("\\u00A0", "");
+                //tempLine = tempLine.replaceAll("\\u00A0", "");
 
                 // Convert all characters to uppercase for easier processing
                 tempLine = tempLine.toUpperCase();
@@ -96,7 +144,7 @@ public class Main {
 
 
 
-        System.out.println(clearText.toString());
+        //System.out.println(clearText.toString());
         return clearText;
     }
 
