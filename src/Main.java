@@ -5,8 +5,8 @@
   specify input and output file names in the runtime arguments.
 
   @author Skyler Carlson
- * @version 1.0
- * @since 2019-04-19
+  @version 1.0
+  @since 2019-04-19
  */
 
 import java.io.BufferedReader;
@@ -76,13 +76,14 @@ public class Main {
             while (freqTableScanner.hasNextLine()) {
                 tempLine = freqTableScanner.nextLine();
 
-                // Clean up any non alphanumeric characters from the string
-                //TODO finish cleaning up dagger character
-                tempLine = tempLine.replaceAll("^[a-zA-Z0-9]+$", "");
+                // Remove punctuation from string
+                tempLine = tempLine.replaceAll("[\\p{P}|\\s]", "");
+
+                // Remove weird whitespace from string
+                tempLine = tempLine.replaceAll("\\u00A0", "");
 
                 // Convert all characters to uppercase for easier processing
-                // TODO finish this
-
+                tempLine = tempLine.toUpperCase();
 
                 // Append temp line to the StringBuilder
                 clearText.append(tempLine);
@@ -92,11 +93,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Clean the string up by replacing any non-numeric characters
-        //clearText = clearText.replaceAll("^[a-zA-Z0-9]+$", "");
 
-
-        // Convert to uppercase for easier processing
 
 
         System.out.println(clearText.toString());
@@ -132,11 +129,13 @@ public class Main {
                     continue;
                 }
 
+                // TODO all this is janky; just extract the number and character from each line using a regex
                 // Split on some possible delimiter options
                 tempLineArray = tempLine.split("([ :\\-ñ])+");
 
                 // TODO improve this logic, if there's time
                 // Try-catch block to handle weird ñ character that causes the split to behave unpredictably
+                // This was residual from when the IDE was interpreting the input file as UTF-8
                 try {
                     // Strip off EOL character by replacing any non-numeric characters from frequency value
                     String tempFreq = tempLineArray[1].replaceAll("[\\D]", "");

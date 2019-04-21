@@ -22,6 +22,22 @@ public class FreqTableEntry {
   }
 
   /**
+   * Getter method for the character.
+   * @return    The character being stored by the object.
+   */
+  public char getCharacter() {
+    return this.character;
+  }
+
+  /**
+   * Getter method for the frequency.
+   * @return    Frequency of the character being stored.
+   */
+  public int getFrequency() {
+    return this.frequency;
+  }
+
+  /**
    * This toString method prints the value for easy viewing.
    */
   public String toString() {
