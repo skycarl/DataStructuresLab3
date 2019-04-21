@@ -6,17 +6,19 @@
  * @version 1.0
  * @since 2019-04-19
  */
-public class FreqTableEntry {
+public class FreqTreeNode {
 
   private char character;
   private int frequency;
+  private FreqTreeNode left = null;
+  private FreqTreeNode right = null;
 
   /**
    * This is the constructor for the frequency table entry
    * @param character   The character to be stored.
    * @param frequency   The frequency of the character being stored.
    */
-  public FreqTableEntry(char character, int frequency) {
+  public FreqTreeNode(char character, int frequency) {
     this.character = character;
     this.frequency = frequency;
   }

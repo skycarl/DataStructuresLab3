@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -36,7 +35,7 @@ public class Main {
         String encodedTextFilename = args[2];
 
         // Read in the Frequency table file
-        FreqTableEntry[] freqTable = new FreqTableEntry[26];
+        FreqTreeNode[] freqTable = new FreqTreeNode[26];
         try {
             freqTable = importFreqTable(freqTableFilename);
         } catch (Exception e) {
@@ -53,7 +52,7 @@ public class Main {
 
         // Split encodedText on \u00A0 character to put into an array
         String clearTextArray[] = clearText.toString().split("\\u00A0");
-        System.out.println(Arrays.toString(clearTextArray));
+        //System.out.println(Arrays.toString(clearTextArray));
 
         // Read in the encoded file
         StringBuilder encodedText = null;
@@ -65,7 +64,7 @@ public class Main {
 
         // Split encodedText on \u00A0 character to put into an array
         String encodedArray[] = encodedText.toString().split("\\u00A0");
-        System.out.println(Arrays.toString(encodedArray));
+        //System.out.println(Arrays.toString(encodedArray));
 
 
         //System.out.println(encodedText.toString());
@@ -154,9 +153,9 @@ public class Main {
      * @param filename      The name of the file containing the frequency table.
      * @return freqTable    The frequency table, stored in an array of Strings.
      */
-    private static FreqTableEntry[] importFreqTable(String filename) {
+    private static FreqTreeNode[] importFreqTable(String filename) {
 
-        FreqTableEntry[] freqTable = new FreqTableEntry[26];
+        FreqTreeNode[] freqTable = new FreqTreeNode[26];
         String tempLine;
         String[] tempLineArray;
         int tempFreqVal;
@@ -200,14 +199,14 @@ public class Main {
                 tempChar = tempLineArray[0].charAt(0);
 
                 // Add values to freqTableEntry object
-                FreqTableEntry tempFreqTableEntry = new FreqTableEntry(tempChar, tempFreqVal);
+                FreqTreeNode tempFreqTreeNode = new FreqTreeNode(tempChar, tempFreqVal);
 
-                // Store tempFreqTableEntry into array
-                freqTable[i] = tempFreqTableEntry;
+                // Store tempFreqTreeNode into array
+                freqTable[i] = tempFreqTreeNode;
                 i++;
 
                 // TODO remove temp print freqtable entry
-                System.out.println(tempFreqTableEntry.toString());
+                //System.out.println(tempFreqTreeNode.toString());
 
             }
             freqTableScanner.close();
