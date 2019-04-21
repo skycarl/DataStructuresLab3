@@ -65,9 +65,12 @@ public class Main {
      */
     private static void importFreqTable(String filename) {
 
-        String[] freqTable = new String[26];
+        FreqTableEntry[] freqTable = new FreqTableEntry[26];
         String tempLine;
         String[] tempLineArray;
+        int tempFreqVal;
+        char tempChar;
+        //FreqTableEntry tempFreqTableEntry;
 
 
 
@@ -79,14 +82,41 @@ public class Main {
             Scanner freqTableScanner = new Scanner(new BufferedReader(new FileReader(freqTableFile)));
 
             // Read the file line by line
-            while (freqTableScanner.hasNext()) {
-                tempLine = freqTableScanner.next();
+            while (freqTableScanner.hasNextLine()) {
+                tempLine = freqTableScanner.nextLine();
+
+                // Test if the line is empty; if so, continue to next loop
+                if (tempLine.isEmpty()) {
+                    continue;
+                }
 
                 // Split on possible delimiter options
                 tempLineArray = tempLine.split("([ :\\-ñ])+");
-                //line.split("( |:|-|ñ)+"); // Original version in case above doesn't work
-                System.out.println(Arrays.toString(tempLineArray));
-                System.out.println("reading line...");
+
+                // TODO improve this logic, if there's time
+                // Try-catch block to handle weird ñ character that causes the split to behave unpredictably
+                try {
+                    // Strip off EOL character by replacing any non-numeric characters from frequency value
+                    String tempFreq = tempLineArray[1].replaceAll("[\\D]", "");
+                    tempFreqVal = Integer.parseInt(tempFreq);
+
+                }
+                catch (NumberFormatException formatExc) {
+                    // Strip off EOL character by replacing any non-numeric characters from frequency value
+                    String tempFreq = tempLineArray[2].replaceAll("[\\D]", "");
+                    tempFreqVal = Integer.parseInt(tempFreq);
+                }
+
+                // Convert String object containing the character to a char type
+                tempChar = tempLineArray[0].charAt(0);
+
+                // Add values to freqTableEntry object
+                FreqTableEntry tempFreqTableEntry = new FreqTableEntry(tempChar, tempFreqVal);
+
+                // Temp print freqtable entry
+                System.out.println(tempFreqTableEntry.toString());
+
+
             }
             freqTableScanner.close();
 
