@@ -100,53 +100,6 @@ public class Lab3 {
     }
 
     /**
-     * This method traverses the Huffman tree to find the Huffman codes for the input string.
-     * @param huffmanTree       The Huffman tree containing the frequency values.
-     * @param clearText         The text to be encoded by the tree.
-     */
-    private static String encodeHuffman(FreqTreeNode huffmanTree, String clearText) {
-
-        String encodedText = null;
-
-        for (int i = 0; i < clearText.length(); i++) {
-            encodedText = encodedText + encodeCharacter(huffmanTree, String.valueOf(clearText.charAt(i)), "");
-
-        }
-
-        return encodedText;
-
-    }
-
-    /**
-     * This method
-     * @param huffmanTree
-     * @param clearText
-     * @param encodedText
-     * @return
-     */
-    private static String encodeCharacter(FreqTreeNode huffmanTree, String clearText, String encodedText) {
-
-        // Base case when character is found
-        if (huffmanTree.getLeft() == null && huffmanTree.getRight() == null) {
-            return encodedText;
-        }
-
-        //
-
-        // Go to the left child
-        encodedText = encodedText + "0";
-        encodeCharacter(huffmanTree.getLeft(), clearText, encodedText);
-
-
-        // Go to the right child
-        encodedText = encodedText + "1";
-        encodeCharacter(huffmanTree.getRight(), clearText, encodedText);
-
-
-        return encodedText;
-    }
-
-    /**
      * This method traverses the Huffman tree and adds the Huffman codes to each node.
      * @param node
      */
@@ -164,9 +117,6 @@ public class Lab3 {
 
         // Go to the right child
         addHuffmanCodes(node.getRight(), encoded + "1");
-
-
-
     }
 
     /**

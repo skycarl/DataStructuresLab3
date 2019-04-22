@@ -169,7 +169,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
 
     }
     else {
-      return this.character + " : " + this.frequency;
+      return this.character + " : " + this.frequency + this.huffmanCode;
     }
 
   }
