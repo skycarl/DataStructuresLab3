@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -52,7 +53,7 @@ public class Main {
         }
 
         // Split encodedText on \u00A0 character to put into an array
-        String clearTextArray[] = clearText.toString().split("\\u00A0");
+        String[] clearTextArray = clearText.toString().split("\\u00A0");
         //System.out.println(Arrays.toString(clearTextArray));
 
         // Read in the encoded file
@@ -64,7 +65,7 @@ public class Main {
         }
 
         // Split encodedText on \u00A0 character to put into an array
-        String encodedArray[] = encodedText.toString().split("\\u00A0");
+        String[] encodedArray = encodedText.toString().split("\\u00A0");
         //System.out.println(Arrays.toString(encodedArray));
 
         // Create a priority queue of FreqTreeNode objects
@@ -72,19 +73,21 @@ public class Main {
         PriorityQueue<FreqTreeNode> nodeQueue = new PriorityQueue<FreqTreeNode>();
 
         // Add elements to the Priority Queue
-        for (int i = 0; i < 26; i++) {
-            nodeQueue.add(freqTable[i]);
-        }
+        nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
 
         // Test print area
         // TODO remove
         //System.out.println("Priority queue: " + nodeQueue);
-        while (!nodeQueue.isEmpty()) {
-            System.out.println(nodeQueue.remove());
-        }
+        //while (!nodeQueue.isEmpty()) {
+        //    System.out.println(nodeQueue.remove());
+        //}
 
         // Build the Huffman tree based on the frequency table
+        FreqTreeNode huffmanTree = new FreqTreeNode();
+        huffmanTree = buildHuffmanTree(nodeQueue);
 
+        // Traverse the Huffman tree, printing as we go along
+        traverseHuffman(huffmanTree);
 
 
         //System.out.println(encodedText.toString());
@@ -93,6 +96,89 @@ public class Main {
 
 
         System.out.println("Program exiting...");
+    }
+
+    private static void traverseHuffman(FreqTreeNode huffmanTree) {
+
+        // Base case for when recursion should end
+        if (huffmanTree == null) {
+            return;
+        }
+
+        // Start at the root node
+        System.out.println(huffmanTree.toString());
+
+        // Go to the left child
+        traverseHuffman(huffmanTree.getLeft());
+
+        // Go to the right child
+        traverseHuffman(huffmanTree.getRight());
+
+
+    }
+
+    /**
+     * Builds the Huffman tree based on the priority queue passed from main().
+     * @param nodeQueue     The priority queue containing frequency table data.
+     * @return              The root node of the tree.
+     */
+    private static FreqTreeNode buildHuffmanTree(PriorityQueue<FreqTreeNode> nodeQueue) {
+        FreqTreeNode rootNode = null;
+        FreqTreeNode smallestNode;
+        FreqTreeNode secondSmallestNode;
+
+        // For the first time thru, assign the char values into the String sequences
+        smallestNode = nodeQueue.poll();
+        secondSmallestNode = nodeQueue.poll();
+        smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
+        secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
+
+        // Add these 2 nodes back to the queue
+        nodeQueue.add(smallestNode);
+        nodeQueue.add(secondSmallestNode);
+
+        // Add to the tree while the priority queue is still empty
+        while (nodeQueue.size() > 1) {
+
+            // This is so the first time through the structure, these polls are skipped
+            //if (nodeQueue.size() != 24) {
+
+                // Get the 2 smallest nodes
+                smallestNode = nodeQueue.poll();
+                secondSmallestNode = nodeQueue.poll();
+            //}
+
+
+            // Assign a String value to the tempNode
+            //String smallestNodeStr = String.valueOf(smallestNode.getCharacter());
+            //String secondSmallestNodeStr = String.valueOf(secondSmallestNode.getCharacter());
+            //FreqTreeNode tempNode = new FreqTreeNode(smallestNodeStr + secondSmallestNodeStr, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
+            //String smallestNodeStr = String.valueOf(smallestNode.getCharacter());
+            //String secondSmallestNodeStr = String.valueOf(secondSmallestNode.getCharacter());
+            String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
+            FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
+
+
+
+            // Assign the left and right pointers for the tempNode
+            tempNode.setLeft(smallestNode);
+            tempNode.setRight(secondSmallestNode);
+
+            // Add tempNode back into the queue
+            nodeQueue.add(tempNode);
+
+            // Set the root node to be the tempNode; this will be incorrect until the while loop is exited
+            rootNode = tempNode;
+
+
+
+
+        }
+
+
+
+
+        return rootNode;
     }
 
     private static StringBuilder importEncodedText(String encodedTextFilename) {

@@ -12,9 +12,21 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
   private int frequency;
   private FreqTreeNode left = null;
   private FreqTreeNode right = null;
+  private FreqTreeNode parent = null;
+  private String huffmanSequence;
+
+    /**
+     * This is the constructor for a Huffman tree node, when a string is passed
+     * @param charString        The string of characters to be used by the Huffman tree
+     * @param frequency         The frequency that this character or string appears.
+     */
+  public FreqTreeNode(String charString, int frequency) {
+      this.huffmanSequence = charString;
+      this.frequency = frequency;
+  }
 
   /**
-   * This is the constructor for the frequency table entry
+   * This is the constructor for the frequency table entry when a character is passed
    * @param character   The character to be stored.
    * @param frequency   The frequency of the character being stored.
    */
@@ -22,6 +34,13 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
     this.character = character;
     this.frequency = frequency;
   }
+
+    /**
+     * Default constructor for the frequency table entry
+     */
+    public FreqTreeNode() {
+
+    }
 
   /**
    * Getter method for the character.
@@ -37,6 +56,14 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
    */
   public int getFrequency() {
     return this.frequency;
+  }
+
+    /**
+     * Setter method for the frequency.
+     * @param freq      Frequency valud for the node
+     */
+  public void setFrequency(int freq) {
+      this.frequency = freq;
   }
 
     /**
@@ -74,6 +101,38 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
     }
 
     /**
+     * Getter method for the parent node.
+     * @return      The parent node for this node.
+     */
+    public FreqTreeNode getParent() {
+        return this.parent;
+    }
+
+    /**
+     * Setter method for the parent of the node.
+     * @param parent    The parent node for this node.
+     */
+    public void setParent(FreqTreeNode parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * Setter method for the Huffman character sequence.
+     * @param sequence      This is the string of chars that the Huffman tree will use.
+     */
+    public void setHuffmanSequence(String sequence) {
+        this.huffmanSequence = sequence;
+    }
+
+    /**
+     * Getter method for the Huffman character sequence.
+     * @return String of characters that denotes the Huffman sequence.
+     */
+    public String getHuffmanSequence() {
+        return this.huffmanSequence;
+    }
+
+    /**
      * This method overrides the default compareTo() method in the priority queue so the custom
      * fields can be used as the priority queue ordering.
      * @param node      The node to which this node is being compared.
@@ -82,15 +141,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
     @Override
     public int compareTo(FreqTreeNode node) {
         // TODO accept this suggestion
-        if (this.getFrequency() > node.getFrequency()) {
-            return 1;
-        }
-        else if (this.getFrequency() < node.getFrequency()) {
-            return -1;
-        }
-        else {
-            return 0;
-        }
+        return Integer.compare(this.getFrequency(), node.getFrequency());
 
     }
 
@@ -98,6 +149,13 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
    * This toString method prints the value for easy viewing.
    */
   public String toString() {
-    return character + " : " + frequency;
+    if (this.huffmanSequence != null) {
+      return this.huffmanSequence + " : " + this.frequency;
+
+    }
+    else {
+      return this.character + " : " + this.frequency;
+    }
+
   }
 }
