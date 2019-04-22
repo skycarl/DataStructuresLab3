@@ -127,26 +127,21 @@ public class Main {
         FreqTreeNode smallestNode;
         FreqTreeNode secondSmallestNode;
 
-        // For the first time thru, assign the char values into the String sequences
-        smallestNode = nodeQueue.poll();
-        secondSmallestNode = nodeQueue.poll();
-        smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
-        secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
-
-        // Add these 2 nodes back to the queue
-        nodeQueue.add(smallestNode);
-        nodeQueue.add(secondSmallestNode);
-
         // Add to the tree while the priority queue is still empty
         while (nodeQueue.size() > 1) {
 
-            // This is so the first time through the structure, these polls are skipped
-            //if (nodeQueue.size() != 24) {
+            // Get the smallest nodes
+            smallestNode = nodeQueue.poll();
+            secondSmallestNode = nodeQueue.poll();
 
-                // Get the 2 smallest nodes
-                smallestNode = nodeQueue.poll();
-                secondSmallestNode = nodeQueue.poll();
-            //}
+            // Assign the HuffmanSequence strings, if it's empty
+            if (smallestNode.getHuffmanSequence() == null) {
+                smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
+            }
+
+            if (secondSmallestNode.getHuffmanSequence() == null) {
+                secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
+            }
 
 
             // Assign a String value to the tempNode
