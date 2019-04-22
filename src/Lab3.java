@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
-public class Main {
+public class Lab3 {
 
     public static void main(String[] args) {
 
@@ -89,6 +89,10 @@ public class Main {
         // Traverse the Huffman tree, printing as we go along
         traverseHuffman(huffmanTree);
 
+        // Encode a string using the Huffman tree, and write to file
+        String encoded = encodeHuffman(huffmanTree, clearTextArray[0]);
+        System.out.println(clearTextArray[0] + " is " + encoded);
+
 
         //System.out.println(encodedText.toString());
 
@@ -98,6 +102,44 @@ public class Main {
         System.out.println("Program exiting...");
     }
 
+    /**
+     * This method traverses the Huffman tree to find the Huffman codes for the input string.
+     * @param huffmanTree       The Huffman tree containing the frequency values.
+     * @param clearText         The text to be encoded by the tree.
+     */
+    private static String encodeHuffman(FreqTreeNode huffmanTree, String clearText) {
+
+        String encodedText = null;
+
+        for (int i = 0; i < clearText.length(); i++) {
+            char charStr = clearText.charAt(i);
+
+            // Traverse the tree until a leaf node with this character is found
+            // Base case for when recursion should end - when a leaf node is reached
+            if (huffmanTree.getLeft() == null && huffmanTree.getRight() == null) {
+                return encodedText;
+            }
+
+            // Go to the left child
+            encodeHuffman(huffmanTree.getLeft(), clearText);
+            encodedText = encodedText + "0";
+
+            // Go to the right child
+            encodeHuffman(huffmanTree.getRight(), clearText);
+            encodedText = encodedText + "1";
+
+        }
+
+
+
+        return encodedText;
+
+    }
+
+    /**
+     * This method traverses the Huffman tree and returns the structure of the tree.
+     * @param huffmanTree       The root node of the Huffman tree.
+     */
     private static void traverseHuffman(FreqTreeNode huffmanTree) {
 
         // Base case for when recursion should end
@@ -153,8 +195,6 @@ public class Main {
             String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
             FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
 
-
-
             // Assign the left and right pointers for the tempNode
             tempNode.setLeft(smallestNode);
             tempNode.setRight(secondSmallestNode);
@@ -164,18 +204,17 @@ public class Main {
 
             // Set the root node to be the tempNode; this will be incorrect until the while loop is exited
             rootNode = tempNode;
-
-
-
-
         }
-
-
 
 
         return rootNode;
     }
 
+    /**
+     * This method imports the encoded text to a StringBuilder object.
+     * @param encodedTextFilename       The name of the file containing the encoded text.
+     * @return encodedText              A StringBuilder object containing the encoded text, read from file.
+     */
     private static StringBuilder importEncodedText(String encodedTextFilename) {
 
         StringBuilder encodedText = new StringBuilder();
