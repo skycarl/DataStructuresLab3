@@ -90,16 +90,13 @@ public class Lab3 {
         traverseHuffman(huffmanTree);
 
         // Encode a string using the Huffman tree, and write to file
-        String encoded = encodeHuffman(huffmanTree, clearTextArray[0]);
-        System.out.println(clearTextArray[0] + " is " + encoded);
-
+        //String encoded = encodeHuffman(huffmanTree, clearTextArray[0]);
+        //System.out.println(clearTextArray[0] + " is " + encoded);
+        addHuffmanCodes(huffmanTree, "");
 
         //System.out.println(encodedText.toString());
 
-
-
-
-        System.out.println("Program exiting...");
+        System.out.println("\nProgram exiting...");
     }
 
     /**
@@ -112,27 +109,63 @@ public class Lab3 {
         String encodedText = null;
 
         for (int i = 0; i < clearText.length(); i++) {
-            char charStr = clearText.charAt(i);
-
-            // Traverse the tree until a leaf node with this character is found
-            // Base case for when recursion should end - when a leaf node is reached
-            if (huffmanTree.getLeft() == null && huffmanTree.getRight() == null) {
-                return encodedText;
-            }
-
-            // Go to the left child
-            encodeHuffman(huffmanTree.getLeft(), clearText);
-            encodedText = encodedText + "0";
-
-            // Go to the right child
-            encodeHuffman(huffmanTree.getRight(), clearText);
-            encodedText = encodedText + "1";
+            encodedText = encodedText + encodeCharacter(huffmanTree, String.valueOf(clearText.charAt(i)), "");
 
         }
 
+        return encodedText;
+
+    }
+
+    /**
+     * This method
+     * @param huffmanTree
+     * @param clearText
+     * @param encodedText
+     * @return
+     */
+    private static String encodeCharacter(FreqTreeNode huffmanTree, String clearText, String encodedText) {
+
+        // Base case when character is found
+        if (huffmanTree.getLeft() == null && huffmanTree.getRight() == null) {
+            return encodedText;
+        }
+
+        //
+
+        // Go to the left child
+        encodedText = encodedText + "0";
+        encodeCharacter(huffmanTree.getLeft(), clearText, encodedText);
+
+
+        // Go to the right child
+        encodedText = encodedText + "1";
+        encodeCharacter(huffmanTree.getRight(), clearText, encodedText);
 
 
         return encodedText;
+    }
+
+    /**
+     * This method traverses the Huffman tree and adds the Huffman codes to each node.
+     * @param node
+     */
+    private static void addHuffmanCodes(FreqTreeNode node, String encoded) {
+
+        // Add the code when a leaf node is found
+        if (node.getLeft() == null && node.getRight() == null) {
+            node.setHuffmanCode(encoded);
+            System.out.println(node.getCharacter() + " : " + encoded);
+            return;
+        }
+
+        // Go to the left child
+        addHuffmanCodes(node.getLeft(), encoded + "0");
+
+        // Go to the right child
+        addHuffmanCodes(node.getRight(), encoded + "1");
+
+
 
     }
 
@@ -148,7 +181,7 @@ public class Lab3 {
         }
 
         // Start at the root node
-        System.out.println(huffmanTree.toString());
+        //System.out.println(huffmanTree.toString());
 
         // Go to the left child
         traverseHuffman(huffmanTree.getLeft());

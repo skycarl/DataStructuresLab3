@@ -14,7 +14,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
   private FreqTreeNode right = null;
   private FreqTreeNode parent = null;
   private String huffmanSequence;
-  private byte huffmanCode;
+  private String huffmanCode;
 
     /**
      * This is the constructor for a Huffman tree node, when a string is passed
@@ -133,6 +133,22 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
         return this.huffmanSequence;
     }
 
+  /**
+   * Getter method for the Huffman code value.
+   * @return Huffman code for this node
+   */
+  public String getHuffmanCode() {
+      return this.huffmanCode;
+    }
+
+  /**
+   * This method sets the Huffman code for the node.
+   * @param code      The Huffman code for the node.
+   */
+  public void setHuffmanCode(String code) {
+      this.huffmanCode = code;
+    }
+
     /**
      * This method overrides the default compareTo() method in the priority queue so the custom
      * fields can be used as the priority queue ordering.
@@ -141,9 +157,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
      */
     @Override
     public int compareTo(FreqTreeNode node) {
-        // TODO accept this suggestion
         return Integer.compare(this.getFrequency(), node.getFrequency());
-
     }
 
   /**
