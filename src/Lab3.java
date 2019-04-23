@@ -183,16 +183,32 @@ public class Lab3 {
             FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
 
             // Resolve a tie scenario by giving precedence to smaller letter groups
-            if (smallestNode.getHuffmanSequence().equals(secondSmallestNode.getHuffmanSequence())) {
+            if (smallestNode.getFrequency() == secondSmallestNode.getFrequency()) {
                 if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
                     tempNode.setLeft(smallestNode);
                     tempNode.setRight(secondSmallestNode);
                 }
+
+                // If there is another tie and the frequencies are the same as well as the # of characters in the sequence
+                else if (smallestNode.getHuffmanSequence().length() == secondSmallestNode.getHuffmanSequence().length()) {
+
+                    // Then use the smaller character as the left node (giving precedence to alphabetical order)
+                    if (smallestNode.getCharacter() < secondSmallestNode.getCharacter()) {
+                        tempNode.setLeft(smallestNode);
+                        tempNode.setRight(secondSmallestNode);
+                    }
+                    else {
+                        tempNode.setLeft(secondSmallestNode);
+                        tempNode.setRight(smallestNode);
+                    }
+                }
+                // Swap the right and the left
                 else {
                     tempNode.setLeft(secondSmallestNode);
                     tempNode.setRight(smallestNode);
                 }
             }
+            // There is no tie, so assign like normal
             else {
                 // Assign the left and right pointers for the tempNode
                 tempNode.setLeft(smallestNode);
