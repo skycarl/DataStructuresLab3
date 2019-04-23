@@ -58,7 +58,6 @@ public class Lab3 {
 
         // Split encodedText on \u00A0 character to put into an array
         String[] clearTextArray = clearText.toString().split("\\u00A0");
-        //System.out.println(Arrays.toString(clearTextArray));
 
         // Read in the encoded file
         StringBuilder encodedText = null;
@@ -70,22 +69,13 @@ public class Lab3 {
 
         // Split encodedText on \u00A0 character to put into an array
         String[] encodedArray = encodedText.toString().split("\\u00A0");
-        //System.out.println(Arrays.toString(encodedArray));
 
         // Create a priority queue of FreqTreeNode objects
-        //PriorityQueue nodeQueue = new PriorityQueue(26, )
         PriorityQueue<FreqTreeNode> nodeQueue = new PriorityQueue<FreqTreeNode>();
 
         // Add elements to the Priority Queue
         // TODO revert this back to original
         nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
-
-        // Test print area
-        // TODO remove
-        //System.out.println("Priority queue: " + nodeQueue);
-        //while (!nodeQueue.isEmpty()) {
-        //    System.out.println(nodeQueue.remove());
-        //}
 
         // Build the Huffman tree based on the frequency table
         FreqTreeNode huffmanTree = new FreqTreeNode();
@@ -95,16 +85,10 @@ public class Lab3 {
         traverseHuffman(huffmanTree);
 
         // Encode a string using the Huffman tree, and write to file
-        //String encoded = encodeHuffman(huffmanTree, clearTextArray[0]);
-        //System.out.println(clearTextArray[0] + " is " + encoded);
         addHuffmanCodes(huffmanTree, "");
 
         // Encode the strings
         encodeHuffman(freqTable, "HELLOWORLD");
-
-
-
-
 
         System.out.println("\nProgram exiting...");
     }
@@ -222,7 +206,6 @@ public class Lab3 {
             rootNode = tempNode;
         }
 
-
         return rootNode;
     }
 
@@ -248,13 +231,11 @@ public class Lab3 {
 
                 // Append temp line to the StringBuilder
                 encodedText.append(tempLine);
-
             }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
 
         return encodedText;
     }
