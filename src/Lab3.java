@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -25,7 +27,7 @@ public class Lab3 {
      */
     public static void main(String[] args) {
 
-        // Verify filenames are specified
+        // Verify file names are specified
         if (args.length != 3) {
             System.out.println(
                 "Error: insufficient runtime arguments. Enter file names for frequency table, clear text, and encoded files.");
@@ -34,6 +36,7 @@ public class Lab3 {
 
         // Assume that the output file will be named output.txt
         String outputFilename = "output.txt"; // TODO check is this is legal or if user needs to specify
+        deletePreviousFile(outputFilename);
 
         // Load file names into variables
         String freqTableFilename = args[0];
@@ -77,37 +80,169 @@ public class Lab3 {
         // TODO revert this back to original
         nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
 
+        /**
+        //temp print PQ
+        FreqTreeNode tempNode;
+        for (int i = 0; i < 26; i++) {
+            tempNode = nodeQueue.poll();
+            System.out.println(tempNode.getCharacter() + " : " + tempNode.getFrequency());
+
+        } **/
+
         // Build the Huffman tree based on the frequency table
         FreqTreeNode huffmanTree = new FreqTreeNode();
         huffmanTree = buildHuffmanTree(nodeQueue);
 
         // Traverse the Huffman tree, printing as we go along
-        traverseHuffman(huffmanTree);
+        // TODO need to change this to print in the correct format
+        //traverseHuffmanAndPrint(huffmanTree);
 
         // Encode a string using the Huffman tree, and write to file
         addHuffmanCodes(huffmanTree, "");
 
-        // Encode the strings
-        encodeHuffman(freqTable, "HELLOWORLD");
+
+
+
+        // Encode the strings in the clearText array
+        StringBuilder[] encodedOutput = new StringBuilder[clearTextArray.length];
+        for (int i = 0; i < clearTextArray.length; i++) {
+            encodedOutput[i] = encodeHuffman(freqTable, clearTextArray[i]);
+        }
+
+        // Print the tree in preorder
+        File outputFile = new File(outputFilename);
+        printStringToFile("\n\n---------Huffman tree in preorder---------\n", outputFile);
+        traverseHuffmanAndPrint(huffmanTree, outputFile);
+        //printStringToFile("\n---------------------------------\n", outputFile);
+
+        printFreqTable(freqTable, outputFile);
+
+        // Send the clear text output to the printing array
+        //File outputFile = new File(outputFilename);
+        printStringToFile("\n\n---------Input/output strings---------\n", outputFile);
+        writeCodingToFile(clearTextArray, encodedOutput, outputFile);
+
+
+        //encodeHuffman(freqTable, "THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG");
 
         System.out.println("\nProgram exiting...");
+    }
+
+    /**
+     * This method prints each leaf node and the Huffman code associated with it.
+     * @param freqTable
+     * @param outputFile
+     */
+    private static void printFreqTable(FreqTreeNode[] freqTable, File outputFile) {
+
+        printStringToFile("\n\n---------Table of Huffman values---------\n", outputFile);
+        for (int i = 0; i < 26; i++) {
+            printStringToFile(freqTable[i].getCharacter() + " : " + freqTable[i].getHuffmanCode(), outputFile);
+            printStringToFile("\n", outputFile);
+        }
+    }
+
+
+    /**
+     * Simple method to print to the file
+     * @param str               String to be printed
+     * @param outputFile        File object that is the output file
+     */
+    private static void printStringToFile(String str, File outputFile) {
+        try {
+            // Create FileWriter object in append mode
+            FileWriter outWriter = new FileWriter(outputFile, true);
+
+            // Write the node to file
+            outWriter.write(str);
+            outWriter.close();
+
+        } catch (IOException ioExc) {
+            System.out.println("Error writing to file " + ioExc.getMessage() +
+                ". Program exiting.");
+        }
+
+    }
+
+    /**
+     * This method prints a Huffman tree node to the file.
+     * @param node
+     * @param outputFile
+     */
+    private static void printNodeToFile(FreqTreeNode node, File outputFile) {
+        try {
+            // Create FileWriter object in append mode
+            FileWriter outWriter = new FileWriter(outputFile, true);
+
+            // Write the node to file
+            outWriter.write(node.getHuffmanSequence() + ": " + node.getFrequency() + "\n");
+            outWriter.close();
+
+        } catch (IOException ioExc) {
+            System.out.println("Error writing to file " + ioExc.getMessage() +
+                ". Program exiting.");
+        }
+
+    }
+
+    /**
+     * This method deletes the previous file, if one exists of the same name.
+     *
+     * @param filename The name of the output file, specified in runtime parameters.
+     */
+    private static void deletePreviousFile(String filename) {
+        File oldFile = new File(filename);
+        oldFile.delete();
+        System.out.println("Previous file \'" + filename + "\' deleted.\n");
+    }
+
+    /**
+     * This method accepts 2 arrays of StringBuilder objects and writes them to file.
+     * @param input         A StringBuilder array containing the original text.
+     * @param output        A StringBuilder array containing the encoded or decoded text.
+     * @param outputFile    The file to which the output should be written.
+     */
+    private static void writeCodingToFile(String[] input, StringBuilder[] output, File outputFile) {
+
+        try {
+            // Create FileWriter object in append mode
+            FileWriter outWriter = new FileWriter(outputFile, true);
+
+            // Loop through array and write
+            for (int i = 0; i < input.length; i++) {
+                outWriter.write("\nInput: " + input[i]);
+                outWriter.write("\nOutput: " + output[i] + "\n");
+            }
+
+            outWriter.close();
+
+        } catch (IOException ioExc) {
+            System.out.println("Error writing to file " + ioExc.getMessage() +
+                ". Program exiting.");
+        }
     }
 
     /**
      * This method takes clear text and encodes it as Huffman.
      * @param freqTable
      * @param clear
+     * @return encoded      StringBuilder object containing the encoded string
      */
-    private static void encodeHuffman(FreqTreeNode[] freqTable, String clear) {
+    private static StringBuilder encodeHuffman(FreqTreeNode[] freqTable, String clear) {
+        StringBuilder encoded = new StringBuilder();
 
-        System.out.println("Printing huffman code:\n");
+        //System.out.println("\n\nPrinting huffman code:\n");
         for (int i = 0; i < clear.length(); i++) {
             for (int j = 0; j < 26; j++) {
                 if (clear.charAt(i) == freqTable[j].getCharacter()) {
-                    System.out.print(freqTable[j].getHuffmanCode());
+
+                    encoded.append(freqTable[j].getHuffmanCode());
+                    //System.out.print(freqTable[j].getHuffmanCode());
                 }
             }
         }
+
+        return encoded;
     }
 
     /**
@@ -119,7 +254,7 @@ public class Lab3 {
         // Add the code when a leaf node is found
         if (node.getLeft() == null && node.getRight() == null) {
             node.setHuffmanCode(encoded);
-            System.out.println(node.getCharacter() + " : " + encoded);
+            //System.out.println(node.getCharacter() + " : " + encoded);
             return;
         }
 
@@ -134,7 +269,7 @@ public class Lab3 {
      * This method traverses the Huffman tree and returns the structure of the tree.
      * @param huffmanTree       The root node of the Huffman tree.
      */
-    private static void traverseHuffman(FreqTreeNode huffmanTree) {
+    private static void traverseHuffmanAndPrint(FreqTreeNode huffmanTree, File outputFile) {
 
         // Base case for when recursion should end
         if (huffmanTree == null) {
@@ -143,12 +278,13 @@ public class Lab3 {
 
         // Start at the root node
         //System.out.println(huffmanTree.toString());
+        printNodeToFile(huffmanTree, outputFile);
 
         // Go to the left child
-        traverseHuffman(huffmanTree.getLeft());
+        traverseHuffmanAndPrint(huffmanTree.getLeft(), outputFile);
 
         // Go to the right child
-        traverseHuffman(huffmanTree.getRight());
+        traverseHuffmanAndPrint(huffmanTree.getRight(), outputFile);
 
     }
 
