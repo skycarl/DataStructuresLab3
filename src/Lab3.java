@@ -178,9 +178,26 @@ public class Lab3 {
             String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
             FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
 
-            // Assign the left and right pointers for the tempNode
-            tempNode.setLeft(smallestNode);
-            tempNode.setRight(secondSmallestNode);
+            // Resolve a tie scenario
+            if (smallestNode.getHuffmanSequence().equals(secondSmallestNode.getHuffmanSequence())) {
+                if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
+                    tempNode.setLeft(smallestNode);
+                    tempNode.setRight(secondSmallestNode);
+                }
+                else {
+                    tempNode.setLeft(secondSmallestNode);
+                    tempNode.setRight(smallestNode);
+                }
+
+            }
+            else {
+                // Assign the left and right pointers for the tempNode
+                tempNode.setLeft(smallestNode);
+                tempNode.setRight(secondSmallestNode);
+            }
+
+
+
 
             // Add tempNode back into the queue
             nodeQueue.add(tempNode);
