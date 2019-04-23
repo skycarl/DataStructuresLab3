@@ -19,6 +19,10 @@ import java.util.Scanner;
 
 public class Lab3 {
 
+    /**
+     * Main driver methods for the program.
+     * @param args      Passed in with runtime arguments; file names for frequency table, clear text, and encoded files
+     */
     public static void main(String[] args) {
 
         // Verify filenames are specified
@@ -73,6 +77,7 @@ public class Lab3 {
         PriorityQueue<FreqTreeNode> nodeQueue = new PriorityQueue<FreqTreeNode>();
 
         // Add elements to the Priority Queue
+        // TODO revert this back to original
         nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
 
         // Test print area
@@ -94,9 +99,31 @@ public class Lab3 {
         //System.out.println(clearTextArray[0] + " is " + encoded);
         addHuffmanCodes(huffmanTree, "");
 
-        //System.out.println(encodedText.toString());
+        // Encode the strings
+        encodeHuffman(freqTable, "HELLOWORLD");
+
+
+
+
 
         System.out.println("\nProgram exiting...");
+    }
+
+    /**
+     * This method takes clear text and encodes it as Huffman.
+     * @param freqTable
+     * @param clear
+     */
+    private static void encodeHuffman(FreqTreeNode[] freqTable, String clear) {
+
+        System.out.println("Printing huffman code:\n");
+        for (int i = 0; i < clear.length(); i++) {
+            for (int j = 0; j < 26; j++) {
+                if (clear.charAt(i) == freqTable[j].getCharacter()) {
+                    System.out.print(freqTable[j].getHuffmanCode());
+                }
+            }
+        }
     }
 
     /**
@@ -139,7 +166,6 @@ public class Lab3 {
         // Go to the right child
         traverseHuffman(huffmanTree.getRight());
 
-
     }
 
     /**
@@ -168,17 +194,11 @@ public class Lab3 {
                 secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
             }
 
-
             // Assign a String value to the tempNode
-            //String smallestNodeStr = String.valueOf(smallestNode.getCharacter());
-            //String secondSmallestNodeStr = String.valueOf(secondSmallestNode.getCharacter());
-            //FreqTreeNode tempNode = new FreqTreeNode(smallestNodeStr + secondSmallestNodeStr, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
-            //String smallestNodeStr = String.valueOf(smallestNode.getCharacter());
-            //String secondSmallestNodeStr = String.valueOf(secondSmallestNode.getCharacter());
             String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
             FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
 
-            // Resolve a tie scenario
+            // Resolve a tie scenario by giving precedence to smaller letter groups
             if (smallestNode.getHuffmanSequence().equals(secondSmallestNode.getHuffmanSequence())) {
                 if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
                     tempNode.setLeft(smallestNode);
@@ -188,16 +208,12 @@ public class Lab3 {
                     tempNode.setLeft(secondSmallestNode);
                     tempNode.setRight(smallestNode);
                 }
-
             }
             else {
                 // Assign the left and right pointers for the tempNode
                 tempNode.setLeft(smallestNode);
                 tempNode.setRight(secondSmallestNode);
             }
-
-
-
 
             // Add tempNode back into the queue
             nodeQueue.add(tempNode);
@@ -279,9 +295,6 @@ public class Lab3 {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
-
 
         //System.out.println(clearText.toString());
         return clearText;

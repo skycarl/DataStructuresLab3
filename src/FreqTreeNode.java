@@ -157,6 +157,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
      */
     @Override
     public int compareTo(FreqTreeNode node) {
+      // TODO revert this back to original
         return Integer.compare(this.getFrequency(), node.getFrequency());
     }
 
