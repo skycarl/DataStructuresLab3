@@ -124,7 +124,7 @@ public class Lab3 {
 
         // Decode input Huffman codes
         StringBuilder decoded = new StringBuilder();
-        decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100", decoded);
+        decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100");
         System.out.println(decoded.toString());
 
 
@@ -137,31 +137,20 @@ public class Lab3 {
      * This method traverses the Huffman tree to decode a string of encoded data.
      * @param node      The node at which the start of the traversal is happening.
      * @param coded     The encoded string of data.
-     * @param decoded   The decoded string of data.
      * @return decoded  A StringBuilder object that contains decoded data.
      */
-    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded, StringBuilder decoded) {
+    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded) {
 
+        // StringBuilder containing the decoded text
+        StringBuilder decoded = new StringBuilder();
+        int j;
 
         // Iterate through the coded String
         for (int i = 0; i < coded.length(); i++) {
+            j = 0;
 
-            // Check if we've reached a leaf node
-            if (node.getLeft() == null && node.getRight() == null) {
-                //decoded.append(node.getCharacter());
-            }
-            // Go left
-            else if (coded.charAt(i) == 0) {
-                decodeHuffman(node.getLeft(), coded, decoded);
-
-            }
-            // Go right
-            else if (coded.charAt(i) == 1) {
-                decodeHuffman(node.getRight(), coded, decoded);
-            }
-
+            decoded.append(traverseHuffmanToDecode(node, coded, j, ""));
         }
-
 
         return decoded;
     }
@@ -173,35 +162,55 @@ public class Lab3 {
      * @param coded
      * @return
      */
-    private static String traverseHuffmanToDecode(FreqTreeNode node, String coded) {
-
-        String decoded = null;
+    private static String traverseHuffmanToDecode(FreqTreeNode node, String coded, int counter, String charString) {
+        //String decoded = null;
 
         // Base case for when recursion should end
-        if (node == null) {
-            return;
-        }
+        //if (decoded != null) {
+        //    return decoded;
+        //}
 
         // Add the code when a leaf node is found
-        if (node.getLeft() == null && node.getRight() == null) {
-            decoded = String.valueOf(node.getCharacter());
+        //if (node.getLeft() == null && node.getRight() == null) {
+        //    String decoded = String.valueOf(node.getCharacter());
+        //    return decoded;
+        //}
+
+        String test1 = node.getHuffmanCode();
+        String test2 = charString;
 
 
+        if (node.getHuffmanCode().equals(charString)) {
+
+
+        //if (node.getHuffmanCode() == charString) {
+            String decoded = String.valueOf(node.getCharacter());
+            //return node.getHuffmanCode();
             return decoded;
-        }
-
-        // Go left
-        if (node.charAt(i) == 0) {
-            decodeHuffman(node.getLeft(), coded);
 
         }
-        // Go right
-        else if (node.charAt(i) == 1) {
-            decodeHuffman(node.getRight(), coded);
+
+
+        else { // Otherwise, continue traversing hte tree
+
+            // Go left
+            if (String.valueOf(coded.charAt(counter)).equals("0")) {
+                String decoded = traverseHuffmanToDecode(node.getLeft(), coded, counter+1, charString + "0");
+                //if (decoded != null) {
+                //    return decoded;
+                //}
+
+            }
+            // Go right
+            if (String.valueOf(coded.charAt(counter)).equals("1")) {
+                String decoded = traverseHuffmanToDecode(node.getRight(), coded, counter+1, charString + "1");
+                //if (decoded != null) {
+                //    return decoded;
+                //}
+            }
         }
 
-        return decodedChar;
-
+        return null;
     }
 
     /**
