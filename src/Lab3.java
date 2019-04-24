@@ -5,19 +5,11 @@
   specify input and output file names in the runtime arguments.
 
   @author Skyler Carlson
-  @version 1.0
   @since 2019-04-19
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Lab3 {
 
@@ -123,9 +115,19 @@ public class Lab3 {
         writeCodingToFile(clearTextArray, encodedOutput, outputFile);
 
         // Decode input Huffman codes
-        StringBuilder decoded = new StringBuilder();
-        decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100", freqTable);
-        System.out.println(decoded.toString());
+
+        // Decode the strings in the encoded array
+        StringBuilder[] decodedOutput = new StringBuilder[encodedArray.length];
+        for (int i = 0; i < encodedArray.length; i++) {
+            decodedOutput[i] = decodeHuffman(huffmanTree, encodedArray[i], freqTable);
+        }
+
+        // Print to file
+        writeCodingToFile(encodedArray, decodedOutput, outputFile);
+
+        //StringBuilder decoded = new StringBuilder();
+        //decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100", freqTable);
+        //System.out.println(decoded.toString());
 
 
         //encodeHuffman(freqTable, "THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG");
@@ -150,6 +152,7 @@ public class Lab3 {
         while (coded.length() > 0) {
             j = 0;
 
+            // Traverse the Huffman tree to find the code
             returnChar = traverseHuffmanToDecode(node, coded, j, "");
 
             // Look up returnChar to get the length Huffman code
@@ -158,10 +161,8 @@ public class Lab3 {
             // Remove the 1st n characters from the coded data, where n = codeLen
             coded = coded.substring(codeLen);
 
+            // Append to the output string
             decoded.append(returnChar);
-
-            // Strip off the codes that were used
-
         }
 
 
@@ -169,7 +170,16 @@ public class Lab3 {
         for (int i = 0; i < coded.length(); i++) {
             j = 0;
 
-            decoded.append(traverseHuffmanToDecode(node, coded, j, ""));
+
+            try {
+                decoded.append(traverseHuffmanToDecode(node, coded, j, ""));
+            }
+            catch (StringIndexOutOfBoundsException e) {
+                System.out.println("EXCEPTION CAUGHT: " + e.getMessage());
+                decoded.append("Error reading Huffman code.");
+            }
+
+
         }
 
         return decoded;
@@ -182,34 +192,16 @@ public class Lab3 {
      * @param coded
      * @return
      */
-    private static String traverseHuffmanToDecode(FreqTreeNode node, String coded, int counter, String charString) {
-        //String decoded = null;
+    private static String traverseHuffmanToDecode(FreqTreeNode node, String coded, int counter, String charString) throws StringIndexOutOfBoundsException {
 
-        // Base case for when recursion should end
-        //if (decoded != null) {
-        //    return decoded;
-        //}
-
-        // Add the code when a leaf node is found
-        //if (node.getLeft() == null && node.getRight() == null) {
-        //    String decoded = String.valueOf(node.getCharacter());
-        //    return decoded;
-        //}
-
-        //String test1 = node.getHuffmanCode();
-        //String test2 = charString;
 
 
         if (counter != 0 && node.getHuffmanCode().equals(charString)) {
 
-
-        //if (node.getHuffmanCode() == charString) {
             String decoded = String.valueOf(node.getCharacter());
-            //return node.getHuffmanCode();
             return decoded;
 
         }
-
 
         else { // Otherwise, continue traversing hte tree
 
