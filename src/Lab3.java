@@ -176,11 +176,11 @@ public class Lab3 {
         //    return decoded;
         //}
 
-        String test1 = node.getHuffmanCode();
-        String test2 = charString;
+        //String test1 = node.getHuffmanCode();
+        //String test2 = charString;
 
 
-        if (node.getHuffmanCode().equals(charString)) {
+        if (counter != 0 && node.getHuffmanCode().equals(charString)) {
 
 
         //if (node.getHuffmanCode() == charString) {
@@ -196,17 +196,17 @@ public class Lab3 {
             // Go left
             if (String.valueOf(coded.charAt(counter)).equals("0")) {
                 String decoded = traverseHuffmanToDecode(node.getLeft(), coded, counter+1, charString + "0");
-                //if (decoded != null) {
-                //    return decoded;
-                //}
+                if (decoded != null) {
+                    return decoded;
+                }
 
             }
             // Go right
             if (String.valueOf(coded.charAt(counter)).equals("1")) {
                 String decoded = traverseHuffmanToDecode(node.getRight(), coded, counter+1, charString + "1");
-                //if (decoded != null) {
-                //    return decoded;
-                //}
+                if (decoded != null) {
+                    return decoded;
+                }
             }
         }
 

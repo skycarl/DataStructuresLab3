@@ -14,7 +14,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
   private FreqTreeNode right = null;
   private FreqTreeNode parent = null;
   private String huffmanSequence;
-  private String huffmanCode;
+  private String huffmanCode = "";
 
     /**
      * This is the constructor for a Huffman tree node, when a string is passed
