@@ -158,7 +158,32 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
     @Override
     public int compareTo(FreqTreeNode node) {
       // TODO revert this back to original
+      //int temp Integer.compare();
+
         return Integer.compare(this.getFrequency(), node.getFrequency());
+
+
+      /**
+      // Tie breaker for the compareTo, so there is a secondary sort order (not just frequency values)
+      if (this.getFrequency() == node.getFrequency()) {
+        if (this.getHuffmanSequence().compareTo(node.getHuffmanSequence()) < 0) {
+          return -1;
+        }
+        else {
+          return 1;
+        }
+
+      }
+      else if (this.getFrequency() > node.getFrequency()) {
+        return 1;
+      }
+      else if (this.getFrequency() < node.getFrequency()) {
+        return -1;
+      }
+      else {
+        return 0;
+      } **/
+
     }
 
   /**

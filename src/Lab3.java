@@ -69,8 +69,11 @@ public class Lab3 {
         PriorityQueue<FreqTreeNode> nodeQueue = new PriorityQueue<FreqTreeNode>();
 
         // Add elements to the Priority Queue
-        // TODO revert this back to original
-        nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
+        //nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26)); // This was a suggestion from
+        // my IDE that would replace the loop below; not sure if this would have allowed
+        for (int i = 0; i < 26; i++) {
+            nodeQueue.add(freqTable[i]);
+        }
 
 
         /**
@@ -120,7 +123,7 @@ public class Lab3 {
         // Decode the strings in the encoded array
         StringBuilder[] decodedOutput = new StringBuilder[encodedArray.length];
         for (int i = 0; i < encodedArray.length; i++) {
-            decodedOutput[i] = decodeHuffman(huffmanTree, encodedArray[i], freqTable);
+            decodedOutput[i] = decodeHuffman(huffmanTree, encodedArray[i], freqTable, outputFile);
         }
 
         // Print to file
@@ -142,7 +145,7 @@ public class Lab3 {
      * @param coded     The encoded string of data.
      * @return decoded  A StringBuilder object that contains decoded data.
      */
-    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded, FreqTreeNode[] freqLookup) {
+    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded, FreqTreeNode[] freqLookup, File outputFile) {
 
         // StringBuilder containing the decoded text
         String returnChar;
@@ -153,34 +156,25 @@ public class Lab3 {
         while (coded.length() > 0) {
             j = 0;
 
-            // Traverse the Huffman tree to find the code
-            returnChar = traverseHuffmanToDecode(node, coded, j, "");
-
-            // Look up returnChar to get the length Huffman code
-            codeLen = encodeHuffman(freqLookup, returnChar).length();
-
-            // Remove the 1st n characters from the coded data, where n = codeLen
-            coded = coded.substring(codeLen);
-
-            // Append to the output string
-            decoded.append(returnChar);
-        }
-
-
-        // Iterate through the coded String
-        for (int i = 0; i < coded.length(); i++) {
-            j = 0;
-
-
             try {
-                decoded.append(traverseHuffmanToDecode(node, coded, j, ""));
+                // Traverse the Huffman tree to find the code
+                returnChar = traverseHuffmanToDecode(node, coded, j, "");
+                // Look up returnChar to get the length Huffman code
+                codeLen = encodeHuffman(freqLookup, returnChar).length();
+
+                // Remove the 1st n characters from the coded data, where n = codeLen
+                coded = coded.substring(codeLen);
+
+                // Append to the output string
+                decoded.append(returnChar);
+
             }
             catch (StringIndexOutOfBoundsException e) {
-                System.out.println("EXCEPTION CAUGHT: " + e.getMessage());
-                decoded.append("Error reading Huffman code.");
+                //System.out.println("EXCEPTION CAUGHT: " + e.getMessage());
+                //printStringToFile("Error reading Huffman code.", outputFile);
+                //decoded.append("Error reading Huffman code.");
+                return new StringBuilder("Error reading Huffman code.");
             }
-
-
         }
 
         return decoded;
@@ -395,7 +389,7 @@ public class Lab3 {
         FreqTreeNode rootNode = null;
         FreqTreeNode smallestNode;
         FreqTreeNode secondSmallestNode;
-        FreqTreeNode thirdSmallestNode;
+        //FreqTreeNode thirdSmallestNode;
 
         // Add to the tree while the priority queue is still empty
         while (nodeQueue.size() > 1) {
@@ -404,7 +398,7 @@ public class Lab3 {
             // TODO try popping 3 times and get the min out of those 3
             smallestNode = nodeQueue.poll();
             secondSmallestNode = nodeQueue.poll();
-            thirdSmallestNode = nodeQueue.poll();
+            //thirdSmallestNode = nodeQueue.poll();
 
             // Assign the HuffmanSequence strings, if it's empty
             if (smallestNode.getHuffmanSequence() == null) {
