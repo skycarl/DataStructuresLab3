@@ -124,7 +124,7 @@ public class Lab3 {
 
         // Decode input Huffman codes
         StringBuilder decoded = new StringBuilder();
-        decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100");
+        decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100", freqTable);
         System.out.println(decoded.toString());
 
 
@@ -139,11 +139,31 @@ public class Lab3 {
      * @param coded     The encoded string of data.
      * @return decoded  A StringBuilder object that contains decoded data.
      */
-    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded) {
+    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded, FreqTreeNode[] freqLookup) {
 
         // StringBuilder containing the decoded text
+        String returnChar;
         StringBuilder decoded = new StringBuilder();
         int j;
+        int codeLen;
+
+        while (coded.length() > 0) {
+            j = 0;
+
+            returnChar = traverseHuffmanToDecode(node, coded, j, "");
+
+            // Look up returnChar to get the length Huffman code
+            codeLen = encodeHuffman(freqLookup, returnChar).length();
+
+            // Remove the 1st n characters from the coded data, where n = codeLen
+            coded = coded.substring(codeLen);
+
+            decoded.append(returnChar);
+
+            // Strip off the codes that were used
+
+        }
+
 
         // Iterate through the coded String
         for (int i = 0; i < coded.length(); i++) {
