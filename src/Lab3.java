@@ -72,6 +72,7 @@ public class Lab3 {
         // TODO revert this back to original
         nodeQueue.addAll(Arrays.asList(freqTable).subList(0, 26));
 
+
         /**
         //temp print PQ
         FreqTreeNode tempNode;
@@ -394,13 +395,16 @@ public class Lab3 {
         FreqTreeNode rootNode = null;
         FreqTreeNode smallestNode;
         FreqTreeNode secondSmallestNode;
+        FreqTreeNode thirdSmallestNode;
 
         // Add to the tree while the priority queue is still empty
         while (nodeQueue.size() > 1) {
 
             // Get the smallest nodes
+            // TODO try popping 3 times and get the min out of those 3
             smallestNode = nodeQueue.poll();
             secondSmallestNode = nodeQueue.poll();
+            thirdSmallestNode = nodeQueue.poll();
 
             // Assign the HuffmanSequence strings, if it's empty
             if (smallestNode.getHuffmanSequence() == null) {
@@ -431,6 +435,7 @@ public class Lab3 {
                         tempNode.setRight(secondSmallestNode);
                     }
                     else {
+                    //if (smallestNode.getCharacter() > secondSmallestNode.getCharacter()) {
                         tempNode.setLeft(secondSmallestNode);
                         tempNode.setRight(smallestNode);
                     }
