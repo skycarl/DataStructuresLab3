@@ -154,18 +154,9 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
      */
     @Override
     public int compareTo(FreqTreeNode node) {
-        // IDE suggested this as a replacement for the below, but unsure if this was allowed
-        // return Integer.compare(this.getFrequency(), node.getFrequency());
 
-      if (this.getFrequency() > node.getFrequency()) {
-        return 1;
-      }
-      else if (this.getFrequency() < node.getFrequency()) {
-        return -1;
-      }
-      else {
-        return 0;
-      }
+      // Compare this node to the one passed in
+      return Integer.compare(this.getFrequency(), node.getFrequency());
     }
 
   /**

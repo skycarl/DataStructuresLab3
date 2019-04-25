@@ -15,7 +15,9 @@ public class Lab3 {
 
     /**
      * Main driver methods for the program.
-     * @param args      Passed in with runtime arguments; file names for frequency table, clear text, encoded files, and output file
+     *
+     * @param args Passed in with runtime arguments; file names for frequency
+     * table, clear text, encoded files, and output file
      */
     public static void main(String[] args) {
 
@@ -25,13 +27,13 @@ public class Lab3 {
         if (args.length == 4) {
             outputFilename = args[3];
 
-        }
-        else if (args.length == 3) { // Assume the user did not specify an output file name
+        } else if (args.length
+            == 3) { // Assume the user did not specify an output file name
             outputFilename = "output.txt";
-        }
-        else {
+        } else {
             System.out.println(
-                "Error: insufficient runtime arguments. Enter file names for frequency table, clear text, and encoded files.");
+                "Error: insufficient runtime arguments. Enter file names for "
+                    + "frequency table, clear text, and encoded files.");
             System.exit(1);
         }
 
@@ -39,7 +41,7 @@ public class Lab3 {
 
         // Load file names into variables
         String freqTableFilename = args[0];
-        String clearTextFilename  = args[1];
+        String clearTextFilename = args[1];
         String encodedTextFilename = args[2];
 
         // Read in the Frequency table file
@@ -82,16 +84,6 @@ public class Lab3 {
             nodeQueue.add(freqTable[i]);
         }
 
-
-        /**
-        //temp print PQ
-        FreqTreeNode tempNode;
-        for (int i = 0; i < 26; i++) {
-            tempNode = nodeQueue.poll();
-            System.out.println(tempNode.getCharacter() + " : " + tempNode.getFrequency());
-
-        } **/
-
         // Build the Huffman tree based on the frequency table
         FreqTreeNode huffmanTree = new FreqTreeNode();
         huffmanTree = buildHuffmanTree(nodeQueue);
@@ -111,19 +103,22 @@ public class Lab3 {
 
         // Print the tree in preorder
         File outputFile = new File(outputFilename);
-        printStringToFile("\n\n---------Huffman tree in preorder---------\n", outputFile);
+        printStringToFile("\n\n---------Huffman tree in preorder---------\n",
+            outputFile);
         traverseHuffmanAndPrint(huffmanTree, outputFile);
 
         printFreqTable(freqTable, outputFile);
 
         // Send the clear text output to the printing array
-        printStringToFile("\n\n---------Input/output strings---------\n", outputFile);
+        printStringToFile("\n\n---------Input/output strings---------\n",
+            outputFile);
         writeCodingToFile(clearTextArray, encodedOutput, outputFile);
 
         // Decode the strings in the encoded array
         StringBuilder[] decodedOutput = new StringBuilder[encodedArray.length];
         for (int i = 0; i < encodedArray.length; i++) {
-            decodedOutput[i] = decodeHuffman(huffmanTree, encodedArray[i], freqTable, outputFile);
+            decodedOutput[i] = decodeHuffman(huffmanTree, encodedArray[i],
+                freqTable, outputFile);
         }
 
         // Print to file
@@ -133,12 +128,15 @@ public class Lab3 {
     }
 
     /**
-     * This method traverses the Huffman tree to decode a string of encoded data.
-     * @param node      The node at which the start of the traversal is happening.
-     * @param coded     The encoded string of data.
+     * This method traverses the Huffman tree to decode a string of encoded
+     * data.
+     *
+     * @param node The node at which the start of the traversal is happening.
+     * @param coded The encoded string of data.
      * @return decoded  A StringBuilder object that contains decoded data.
      */
-    private static StringBuilder decodeHuffman(FreqTreeNode node, String coded, FreqTreeNode[] freqLookup, File outputFile) {
+    private static StringBuilder decodeHuffman(FreqTreeNode node,
+        String coded, FreqTreeNode[] freqLookup, File outputFile) {
 
         // StringBuilder containing the decoded text
         String returnChar;
@@ -161,12 +159,13 @@ public class Lab3 {
                 // Append to the output string
                 decoded.append(returnChar);
 
-            }
-            catch (StringIndexOutOfBoundsException e) { // Catch specific exception if there is a possible invalid input code
-                return new StringBuilder("Error reading Huffman code; potential invalid input.");
-            }
-            catch (Exception e) { // catch general exception
-                return new StringBuilder("Unspecified error reading Huffman code.");
+                // Catch specific exception if there is a possible invalid input code
+            } catch (StringIndexOutOfBoundsException e) {
+                return new StringBuilder(
+                    "Error reading Huffman code; potential invalid input.");
+            } catch (Exception e) { // catch general exception
+                return new StringBuilder(
+                    "Unspecified error reading Huffman code.");
             }
         }
 
@@ -175,12 +174,16 @@ public class Lab3 {
 
 
     /**
-     * This method traverses the Huffman tree to find the code for a specific character.
-     * @param node      The root node.
-     * @param coded     The encoded array to be decoded via the tree.
-     * @return          Returns the decoded array.
+     * This method traverses the Huffman tree to find the code for a specific
+     * character.
+     *
+     * @param node The root node.
+     * @param coded The encoded array to be decoded via the tree.
+     * @return Returns the decoded array.
      */
-    private static String traverseHuffmanToDecode(FreqTreeNode node, String coded, int counter, String charString) throws StringIndexOutOfBoundsException {
+    private static String traverseHuffmanToDecode(FreqTreeNode node,
+        String coded, int counter, String charString)
+        throws StringIndexOutOfBoundsException {
 
         // Base condition
         if (counter != 0 && node.getHuffmanCode().equals(charString)) {
@@ -192,14 +195,16 @@ public class Lab3 {
 
             // Go left
             if (String.valueOf(coded.charAt(counter)).equals("0")) {
-                String decoded = traverseHuffmanToDecode(node.getLeft(), coded, counter+1, charString + "0");
+                String decoded = traverseHuffmanToDecode(node.getLeft(),
+                    coded, counter + 1, charString + "0");
                 if (decoded != null) {
                     return decoded;
                 }
             }
             // Go right
             if (String.valueOf(coded.charAt(counter)).equals("1")) {
-                String decoded = traverseHuffmanToDecode(node.getRight(), coded, counter+1, charString + "1");
+                String decoded = traverseHuffmanToDecode(node.getRight(),
+                    coded, counter + 1, charString + "1");
                 if (decoded != null) {
                     return decoded;
                 }
@@ -209,24 +214,32 @@ public class Lab3 {
     }
 
     /**
-     * This method prints each leaf node and the Huffman code associated with it.
-     * @param freqTable         The frequency table.
-     * @param outputFile        The file object to be written to.
+     * This method prints each leaf node and the Huffman code associated with
+     * it.
+     *
+     * @param freqTable The frequency table.
+     * @param outputFile The file object to be written to.
      */
-    private static void printFreqTable(FreqTreeNode[] freqTable, File outputFile) {
+    private static void printFreqTable(FreqTreeNode[] freqTable,
+        File outputFile) {
 
-        printStringToFile("\n\n---------Table of Huffman values---------\n", outputFile);
+        printStringToFile("\n\n---------Table of Huffman values---------\n",
+            outputFile);
         printStringToFile("(Char : Freq : Huffman code)\n", outputFile);
         for (int i = 0; i < 26; i++) {
-            printStringToFile(freqTable[i].getCharacter() + " : " + freqTable[i].getFrequency() + " : " + freqTable[i].getHuffmanCode(), outputFile);
+            printStringToFile(
+                freqTable[i].getCharacter() + " : " + freqTable[i]
+                    .getFrequency() + " : " + freqTable[i].getHuffmanCode(),
+                outputFile);
             printStringToFile("\n", outputFile);
         }
     }
 
     /**
      * Simple method to print to the file
-     * @param str               String to be printed
-     * @param outputFile        File object that is the output file
+     *
+     * @param str String to be printed
+     * @param outputFile File object that is the output file
      */
     private static void printStringToFile(String str, File outputFile) {
         try {
@@ -245,8 +258,9 @@ public class Lab3 {
 
     /**
      * This method prints a Huffman tree node to the file.
-     * @param node              The node to be printed.
-     * @param outputFile        The file object to be written to.
+     *
+     * @param node The node to be printed.
+     * @param outputFile The file object to be written to.
      */
     private static void printNodeToFile(FreqTreeNode node, File outputFile) {
         try {
@@ -254,7 +268,9 @@ public class Lab3 {
             FileWriter outWriter = new FileWriter(outputFile, true);
 
             // Write the node to file
-            outWriter.write(node.getHuffmanSequence() + ": " + node.getFrequency() + "\n");
+            outWriter.write(
+                node.getHuffmanSequence() + ": " + node.getFrequency()
+                    + "\n");
             outWriter.close();
 
         } catch (IOException ioExc) {
@@ -266,7 +282,8 @@ public class Lab3 {
     /**
      * This method deletes the previous file, if one exists of the same name.
      *
-     * @param filename The name of the output file, specified in runtime parameters.
+     * @param filename The name of the output file, specified in runtime
+     * parameters.
      */
     private static void deletePreviousFile(String filename) {
         File oldFile = new File(filename);
@@ -274,12 +291,16 @@ public class Lab3 {
     }
 
     /**
-     * This method accepts 2 arrays of StringBuilder objects and writes them to file.
-     * @param input         A StringBuilder array containing the original text.
-     * @param output        A StringBuilder array containing the encoded or decoded text.
-     * @param outputFile    The file to which the output should be written.
+     * This method accepts 2 arrays of StringBuilder objects and writes them
+     * to file.
+     *
+     * @param input A StringBuilder array containing the original text.
+     * @param output A StringBuilder array containing the encoded or decoded
+     * text.
+     * @param outputFile The file to which the output should be written.
      */
-    private static void writeCodingToFile(String[] input, StringBuilder[] output, File outputFile) {
+    private static void writeCodingToFile(String[] input,
+        StringBuilder[] output, File outputFile) {
 
         try {
             // Create FileWriter object in append mode
@@ -301,11 +322,13 @@ public class Lab3 {
 
     /**
      * This method takes clear text and encodes it as Huffman.
-     * @param freqTable     The frequency table.
-     * @param clear         The clear text to be encoded.
+     *
+     * @param freqTable The frequency table.
+     * @param clear The clear text to be encoded.
      * @return encoded      StringBuilder object containing the encoded string
      */
-    private static StringBuilder encodeHuffman(FreqTreeNode[] freqTable, String clear) {
+    private static StringBuilder encodeHuffman(FreqTreeNode[] freqTable,
+        String clear) {
         StringBuilder encoded = new StringBuilder();
 
         // Loop through the clear text array
@@ -323,8 +346,10 @@ public class Lab3 {
     }
 
     /**
-     * This method traverses the Huffman tree and adds the Huffman codes to each node.
-     * @param node          The root node of the Huffman tree.
+     * This method traverses the Huffman tree and adds the Huffman codes to
+     * each node.
+     *
+     * @param node The root node of the Huffman tree.
      */
     private static void addHuffmanCodes(FreqTreeNode node, String encoded) {
 
@@ -342,10 +367,13 @@ public class Lab3 {
     }
 
     /**
-     * This method traverses the Huffman tree and returns the structure of the tree.
-     * @param huffmanTree       The root node of the Huffman tree.
+     * This method traverses the Huffman tree and returns the structure of the
+     * tree.
+     *
+     * @param huffmanTree The root node of the Huffman tree.
      */
-    private static void traverseHuffmanAndPrint(FreqTreeNode huffmanTree, File outputFile) {
+    private static void traverseHuffmanAndPrint(FreqTreeNode huffmanTree,
+        File outputFile) {
 
         // Base case for when recursion should end
         if (huffmanTree == null) {
@@ -364,11 +392,14 @@ public class Lab3 {
     }
 
     /**
-     * Builds the Huffman tree based on the priority queue passed from main().
-     * @param nodeQueue     The priority queue containing frequency table data.
-     * @return              The root node of the tree.
+     * Builds the Huffman tree based on the priority queue passed from
+     * main().
+     *
+     * @param nodeQueue The priority queue containing frequency table data.
+     * @return The root node of the tree.
      */
-    private static FreqTreeNode buildHuffmanTree(PriorityQueue<FreqTreeNode> nodeQueue) {
+    private static FreqTreeNode buildHuffmanTree(
+        PriorityQueue<FreqTreeNode> nodeQueue) {
         FreqTreeNode rootNode = null;
         FreqTreeNode smallestNode;
         FreqTreeNode secondSmallestNode;
@@ -387,7 +418,8 @@ public class Lab3 {
             // Add tempNode back into the queue
             nodeQueue.add(tempNode);
 
-            // Set the root node to be the tempNode; this will be incorrect until the while loop is exited
+            // Set the root node to be the tempNode; this will be incorrect
+            // until the while loop is exited
             rootNode = tempNode;
         }
 
@@ -395,42 +427,56 @@ public class Lab3 {
     }
 
     /**
-     * This breaks ties between two nodes and returns the temporary, combined node.
-     * @param smallestNode              The smallest node removed from the Priority Queue.
-     * @param secondSmallestNode        The second smallest node removed from the Priority Queue.
-     * @return                          The temporary, combined node of these 2 nodes.
+     * This breaks ties between two nodes and returns the temporary, combined
+     * node.
+     *
+     * @param smallestNode The smallest node removed from the Priority Queue.
+     * @param secondSmallestNode The second smallest node removed from the
+     * Priority Queue.
+     * @return The temporary, combined node of these 2 nodes.
      */
-    private static FreqTreeNode breakTies(FreqTreeNode smallestNode, FreqTreeNode secondSmallestNode) {
+    private static FreqTreeNode breakTies(FreqTreeNode smallestNode,
+        FreqTreeNode secondSmallestNode) {
 
         // Assign the HuffmanSequence strings, if it's empty
         if (smallestNode.getHuffmanSequence() == null) {
-            smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
+            smallestNode.setHuffmanSequence(
+                String.valueOf(smallestNode.getCharacter()));
         }
 
         if (secondSmallestNode.getHuffmanSequence() == null) {
-            secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
+            secondSmallestNode.setHuffmanSequence(
+                String.valueOf(secondSmallestNode.getCharacter()));
         }
 
         // Assign a String value to the tempNode
-        String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
-        FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
+        String newHuffman =
+            smallestNode.getHuffmanSequence() + secondSmallestNode
+                .getHuffmanSequence();
+        FreqTreeNode tempNode = new FreqTreeNode(newHuffman,
+            smallestNode.getFrequency() + secondSmallestNode.getFrequency());
 
         // Resolve a tie scenario by giving precedence to smaller letter groups
-        if (smallestNode.getFrequency() == secondSmallestNode.getFrequency()) {
-            if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
+        if (smallestNode.getFrequency() == secondSmallestNode
+            .getFrequency()) {
+            if (smallestNode.getHuffmanSequence().length()
+                < secondSmallestNode.getHuffmanSequence().length()) {
                 tempNode.setLeft(smallestNode);
                 tempNode.setRight(secondSmallestNode);
             }
 
-            // If there is another tie and the frequencies are the same as well as the # of characters in the sequence
-            else if (smallestNode.getHuffmanSequence().length() == secondSmallestNode.getHuffmanSequence().length()) {
+            // If there is another tie and the frequencies are the same as
+            // well as the # of characters in the sequence
+            else if (smallestNode.getHuffmanSequence().length()
+                == secondSmallestNode.getHuffmanSequence().length()) {
 
-                // Then use the smaller character as the left node (giving precedence to alphabetical order)
-                if (smallestNode.getCharacter() < secondSmallestNode.getCharacter()) {
+                // Then use the smaller character as the left node (giving
+                // precedence to alphabetical order)
+                if (smallestNode.getCharacter() < secondSmallestNode
+                    .getCharacter()) {
                     tempNode.setLeft(smallestNode);
                     tempNode.setRight(secondSmallestNode);
-                }
-                else {
+                } else {
                     tempNode.setLeft(secondSmallestNode);
                     tempNode.setRight(smallestNode);
                 }
@@ -453,10 +499,14 @@ public class Lab3 {
 
     /**
      * This method imports the encoded text to a StringBuilder object.
-     * @param encodedTextFilename       The name of the file containing the encoded text.
-     * @return encodedText              A StringBuilder object containing the encoded text, read from file.
+     *
+     * @param encodedTextFilename The name of the file containing the encoded
+     * text.
+     * @return encodedText              A StringBuilder object containing the
+     * encoded text, read from file.
      */
-    private static StringBuilder importEncodedText(String encodedTextFilename) {
+    private static StringBuilder importEncodedText(
+        String encodedTextFilename) {
 
         StringBuilder encodedText = new StringBuilder();
         String tempLine;
@@ -484,7 +534,9 @@ public class Lab3 {
 
     /**
      * This method imports the clear text file.
-     * @param clearTextFilename The name of the file containing the clear text.
+     *
+     * @param clearTextFilename The name of the file containing the clear
+     * text.
      * @return clearText        StringBuilder object of the clear text.
      */
     private static StringBuilder importClearText(String clearTextFilename) {
@@ -520,10 +572,12 @@ public class Lab3 {
     }
 
     /**
-     * This method imports the frequency table and returns an array of String objects that contain
-     * the frequency data.
-     * @param filename      The name of the file containing the frequency table.
-     * @return freqTable    The frequency table, stored in an array of Strings.
+     * This method imports the frequency table and returns an array of String
+     * objects that contain the frequency data.
+     *
+     * @param filename The name of the file containing the frequency table.
+     * @return freqTable    The frequency table, stored in an array of
+     * Strings.
      */
     private static FreqTreeNode[] importFreqTable(String filename) {
 
@@ -537,7 +591,8 @@ public class Lab3 {
         try {
             // Create the file and scanner objects
             File freqTableFile = new File(filename);
-            Scanner freqTableScanner = new Scanner(new BufferedReader(new FileReader(freqTableFile)));
+            Scanner freqTableScanner = new Scanner(
+                new BufferedReader(new FileReader(freqTableFile)));
 
             // Read the file line by line
             while (freqTableScanner.hasNextLine()) {
@@ -548,22 +603,28 @@ public class Lab3 {
                     continue;
                 }
 
-                // TODO all this is janky; just extract the number and character from each line using a regex
+                // TODO all this is janky; just extract the number and character
+                //  from each line using a regex
                 // Split on some possible delimiter options
                 tempLineArray = tempLine.split("([ :\\-ñ])+");
 
                 // TODO improve this logic, if there's time
-                // Try-catch block to handle weird ñ character that causes the split to behave unpredictably
-                // This was residual from when the IDE was interpreting the input file as UTF-8; may no longer be needed
+                // Try-catch block to handle weird ñ character that causes the
+                // split to behave unpredictably
+                // This was residual from when the IDE was interpreting the
+                // input file as UTF-8; may no longer be needed
                 try {
-                    // Strip off EOL character by replacing any non-numeric characters from frequency value
-                    String tempFreq = tempLineArray[1].replaceAll("[\\D]", "");
+                    // Strip off EOL character by replacing any non-numeric
+                    // characters from frequency value
+                    String tempFreq = tempLineArray[1]
+                        .replaceAll("[\\D]", "");
                     tempFreqVal = Integer.parseInt(tempFreq);
 
-                }
-                catch (NumberFormatException formatExc) {
-                    // Strip off EOL character by replacing any non-numeric characters from frequency value
-                    String tempFreq = tempLineArray[2].replaceAll("[\\D]", "");
+                } catch (NumberFormatException formatExc) {
+                    // Strip off EOL character by replacing any non-numeric
+                    // characters from frequency value
+                    String tempFreq = tempLineArray[2]
+                        .replaceAll("[\\D]", "");
                     tempFreqVal = Integer.parseInt(tempFreq);
                 }
 
@@ -571,7 +632,8 @@ public class Lab3 {
                 tempChar = tempLineArray[0].charAt(0);
 
                 // Add values to freqTableEntry object
-                FreqTreeNode tempFreqTreeNode = new FreqTreeNode(tempChar, tempFreqVal);
+                FreqTreeNode tempFreqTreeNode = new FreqTreeNode(tempChar,
+                    tempFreqVal);
 
                 // Store tempFreqTreeNode into array
                 freqTable[i] = tempFreqTreeNode;
@@ -579,9 +641,7 @@ public class Lab3 {
 
             }
             freqTableScanner.close();
-        }
-
-        catch (FileNotFoundException fileExc) {
+        } catch (FileNotFoundException fileExc) {
             System.out.println("File not found: " + fileExc.getMessage() +
                 ". Program exiting.");
             System.exit(1);
