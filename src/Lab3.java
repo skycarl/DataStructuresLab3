@@ -96,9 +96,6 @@ public class Lab3 {
         // Encode a string using the Huffman tree, and write to file
         addHuffmanCodes(huffmanTree, "");
 
-
-
-
         // Encode the strings in the clearText array
         StringBuilder[] encodedOutput = new StringBuilder[clearTextArray.length];
         for (int i = 0; i < clearTextArray.length; i++) {
@@ -109,16 +106,12 @@ public class Lab3 {
         File outputFile = new File(outputFilename);
         printStringToFile("\n\n---------Huffman tree in preorder---------\n", outputFile);
         traverseHuffmanAndPrint(huffmanTree, outputFile);
-        //printStringToFile("\n---------------------------------\n", outputFile);
 
         printFreqTable(freqTable, outputFile);
 
         // Send the clear text output to the printing array
-        //File outputFile = new File(outputFilename);
         printStringToFile("\n\n---------Input/output strings---------\n", outputFile);
         writeCodingToFile(clearTextArray, encodedOutput, outputFile);
-
-        // Decode input Huffman codes
 
         // Decode the strings in the encoded array
         StringBuilder[] decodedOutput = new StringBuilder[encodedArray.length];
@@ -129,14 +122,7 @@ public class Lab3 {
         // Print to file
         writeCodingToFile(encodedArray, decodedOutput, outputFile);
 
-        //StringBuilder decoded = new StringBuilder();
-        //decoded = decodeHuffman(huffmanTree, "1101101000010001111100011111101000000101100", freqTable);
-        //System.out.println(decoded.toString());
-
-
-        //encodeHuffman(freqTable, "THEQUICKBROWNFOXJUMPEDOVERTHELAZYDOG");
-
-        System.out.println("\nProgram exiting...");
+        System.out.println("\nProgram completed.");
     }
 
     /**
@@ -169,11 +155,11 @@ public class Lab3 {
                 decoded.append(returnChar);
 
             }
-            catch (StringIndexOutOfBoundsException e) {
-                //System.out.println("EXCEPTION CAUGHT: " + e.getMessage());
-                //printStringToFile("Error reading Huffman code.", outputFile);
-                //decoded.append("Error reading Huffman code.");
-                return new StringBuilder("Error reading Huffman code.");
+            catch (StringIndexOutOfBoundsException e) { // Catch specific exception if there is a possible invalid input code
+                return new StringBuilder("Error reading Huffman code; potential invalid input.");
+            }
+            catch (Exception e) { // catch general exception
+                return new StringBuilder("Unspecified error reading Huffman code.");
             }
         }
 
@@ -183,22 +169,19 @@ public class Lab3 {
 
     /**
      * This method traverses the Huffman tree to find the code for a specific character.
-     * @param node
-     * @param coded
-     * @return
+     * @param node      The root node.
+     * @param coded     The encoded array to be decoded via the tree.
+     * @return          Returns the decoded array.
      */
     private static String traverseHuffmanToDecode(FreqTreeNode node, String coded, int counter, String charString) throws StringIndexOutOfBoundsException {
 
-
-
+        // Base condition
         if (counter != 0 && node.getHuffmanCode().equals(charString)) {
-
-            String decoded = String.valueOf(node.getCharacter());
-            return decoded;
-
+            return String.valueOf(node.getCharacter());
         }
 
-        else { // Otherwise, continue traversing hte tree
+        // Recursively traverse the tree
+        else {
 
             // Go left
             if (String.valueOf(coded.charAt(counter)).equals("0")) {
@@ -206,7 +189,6 @@ public class Lab3 {
                 if (decoded != null) {
                     return decoded;
                 }
-
             }
             // Go right
             if (String.valueOf(coded.charAt(counter)).equals("1")) {
@@ -216,24 +198,23 @@ public class Lab3 {
                 }
             }
         }
-
         return null;
     }
 
     /**
      * This method prints each leaf node and the Huffman code associated with it.
-     * @param freqTable
-     * @param outputFile
+     * @param freqTable         The frequency table.
+     * @param outputFile        The file object to be written to.
      */
     private static void printFreqTable(FreqTreeNode[] freqTable, File outputFile) {
 
         printStringToFile("\n\n---------Table of Huffman values---------\n", outputFile);
+        printStringToFile("(Char : Freq : Huffman code)\n", outputFile);
         for (int i = 0; i < 26; i++) {
-            printStringToFile(freqTable[i].getCharacter() + " : " + freqTable[i].getHuffmanCode(), outputFile);
+            printStringToFile(freqTable[i].getCharacter() + " : " + freqTable[i].getFrequency() + " : " + freqTable[i].getHuffmanCode(), outputFile);
             printStringToFile("\n", outputFile);
         }
     }
-
 
     /**
      * Simple method to print to the file
@@ -253,13 +234,12 @@ public class Lab3 {
             System.out.println("Error writing to file " + ioExc.getMessage() +
                 ". Program exiting.");
         }
-
     }
 
     /**
      * This method prints a Huffman tree node to the file.
-     * @param node
-     * @param outputFile
+     * @param node              The node to be printed.
+     * @param outputFile        The file object to be written to.
      */
     private static void printNodeToFile(FreqTreeNode node, File outputFile) {
         try {
@@ -274,7 +254,6 @@ public class Lab3 {
             System.out.println("Error writing to file " + ioExc.getMessage() +
                 ". Program exiting.");
         }
-
     }
 
     /**
@@ -285,7 +264,6 @@ public class Lab3 {
     private static void deletePreviousFile(String filename) {
         File oldFile = new File(filename);
         oldFile.delete();
-        System.out.println("Previous file \'" + filename + "\' deleted.\n");
     }
 
     /**
@@ -316,20 +294,20 @@ public class Lab3 {
 
     /**
      * This method takes clear text and encodes it as Huffman.
-     * @param freqTable
-     * @param clear
+     * @param freqTable     The frequency table.
+     * @param clear         The clear text to be encoded.
      * @return encoded      StringBuilder object containing the encoded string
      */
     private static StringBuilder encodeHuffman(FreqTreeNode[] freqTable, String clear) {
         StringBuilder encoded = new StringBuilder();
 
-        //System.out.println("\n\nPrinting huffman code:\n");
+        // Loop through the clear text array
         for (int i = 0; i < clear.length(); i++) {
             for (int j = 0; j < 26; j++) {
                 if (clear.charAt(i) == freqTable[j].getCharacter()) {
 
+                    // Append to the StringBuilder
                     encoded.append(freqTable[j].getHuffmanCode());
-                    //System.out.print(freqTable[j].getHuffmanCode());
                 }
             }
         }
@@ -339,14 +317,13 @@ public class Lab3 {
 
     /**
      * This method traverses the Huffman tree and adds the Huffman codes to each node.
-     * @param node
+     * @param node          The root node of the Huffman tree.
      */
     private static void addHuffmanCodes(FreqTreeNode node, String encoded) {
 
-        // Add the code when a leaf node is found
+        // Add the code when a leaf node is found; base case
         if (node.getLeft() == null && node.getRight() == null) {
             node.setHuffmanCode(encoded);
-            //System.out.println(node.getCharacter() + " : " + encoded);
             return;
         }
 
@@ -369,7 +346,6 @@ public class Lab3 {
         }
 
         // Start at the root node
-        //System.out.println(huffmanTree.toString());
         printNodeToFile(huffmanTree, outputFile);
 
         // Go to the left child
@@ -389,63 +365,17 @@ public class Lab3 {
         FreqTreeNode rootNode = null;
         FreqTreeNode smallestNode;
         FreqTreeNode secondSmallestNode;
-        //FreqTreeNode thirdSmallestNode;
+        FreqTreeNode tempNode;
 
         // Add to the tree while the priority queue is still empty
         while (nodeQueue.size() > 1) {
 
             // Get the smallest nodes
-            // TODO try popping 3 times and get the min out of those 3
             smallestNode = nodeQueue.poll();
             secondSmallestNode = nodeQueue.poll();
-            //thirdSmallestNode = nodeQueue.poll();
 
-            // Assign the HuffmanSequence strings, if it's empty
-            if (smallestNode.getHuffmanSequence() == null) {
-                smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
-            }
-
-            if (secondSmallestNode.getHuffmanSequence() == null) {
-                secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
-            }
-
-            // Assign a String value to the tempNode
-            String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
-            FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
-
-            // Resolve a tie scenario by giving precedence to smaller letter groups
-            if (smallestNode.getFrequency() == secondSmallestNode.getFrequency()) {
-                if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
-                    tempNode.setLeft(smallestNode);
-                    tempNode.setRight(secondSmallestNode);
-                }
-
-                // If there is another tie and the frequencies are the same as well as the # of characters in the sequence
-                else if (smallestNode.getHuffmanSequence().length() == secondSmallestNode.getHuffmanSequence().length()) {
-
-                    // Then use the smaller character as the left node (giving precedence to alphabetical order)
-                    if (smallestNode.getCharacter() < secondSmallestNode.getCharacter()) {
-                        tempNode.setLeft(smallestNode);
-                        tempNode.setRight(secondSmallestNode);
-                    }
-                    else {
-                    //if (smallestNode.getCharacter() > secondSmallestNode.getCharacter()) {
-                        tempNode.setLeft(secondSmallestNode);
-                        tempNode.setRight(smallestNode);
-                    }
-                }
-                // Swap the right and the left
-                else {
-                    tempNode.setLeft(secondSmallestNode);
-                    tempNode.setRight(smallestNode);
-                }
-            }
-            // There is no tie, so assign like normal
-            else {
-                // Assign the left and right pointers for the tempNode
-                tempNode.setLeft(smallestNode);
-                tempNode.setRight(secondSmallestNode);
-            }
+            // Send to the tie breaker method
+            tempNode = breakTies(smallestNode, secondSmallestNode);
 
             // Add tempNode back into the queue
             nodeQueue.add(tempNode);
@@ -455,6 +385,63 @@ public class Lab3 {
         }
 
         return rootNode;
+    }
+
+    /**
+     * This breaks ties between two nodes and returns the temporary, combined node.
+     * @param smallestNode              The smallest node removed from the Priority Queue.
+     * @param secondSmallestNode        The second smallest node removed from the Priority Queue.
+     * @return                          The temporary, combined node of these 2 nodes.
+     */
+    private static FreqTreeNode breakTies(FreqTreeNode smallestNode, FreqTreeNode secondSmallestNode) {
+
+        // Assign the HuffmanSequence strings, if it's empty
+        if (smallestNode.getHuffmanSequence() == null) {
+            smallestNode.setHuffmanSequence(String.valueOf(smallestNode.getCharacter()));
+        }
+
+        if (secondSmallestNode.getHuffmanSequence() == null) {
+            secondSmallestNode.setHuffmanSequence(String.valueOf(secondSmallestNode.getCharacter()));
+        }
+
+        // Assign a String value to the tempNode
+        String newHuffman = smallestNode.getHuffmanSequence() + secondSmallestNode.getHuffmanSequence();
+        FreqTreeNode tempNode = new FreqTreeNode(newHuffman, smallestNode.getFrequency() + secondSmallestNode.getFrequency());
+
+        // Resolve a tie scenario by giving precedence to smaller letter groups
+        if (smallestNode.getFrequency() == secondSmallestNode.getFrequency()) {
+            if (smallestNode.getHuffmanSequence().length() < secondSmallestNode.getHuffmanSequence().length()) {
+                tempNode.setLeft(smallestNode);
+                tempNode.setRight(secondSmallestNode);
+            }
+
+            // If there is another tie and the frequencies are the same as well as the # of characters in the sequence
+            else if (smallestNode.getHuffmanSequence().length() == secondSmallestNode.getHuffmanSequence().length()) {
+
+                // Then use the smaller character as the left node (giving precedence to alphabetical order)
+                if (smallestNode.getCharacter() < secondSmallestNode.getCharacter()) {
+                    tempNode.setLeft(smallestNode);
+                    tempNode.setRight(secondSmallestNode);
+                }
+                else {
+                    tempNode.setLeft(secondSmallestNode);
+                    tempNode.setRight(smallestNode);
+                }
+            }
+            // Swap the right and the left
+            else {
+                tempNode.setLeft(secondSmallestNode);
+                tempNode.setRight(smallestNode);
+            }
+        }
+        // There is no tie, so assign like normal
+        else {
+            // Assign the left and right pointers for the tempNode
+            tempNode.setLeft(smallestNode);
+            tempNode.setRight(secondSmallestNode);
+        }
+
+        return tempNode;
     }
 
     /**
@@ -511,9 +498,6 @@ public class Lab3 {
                 // Remove punctuation from string
                 tempLine = tempLine.replaceAll("[\\p{P}|\\s]", "");
 
-                // Remove weird whitespace from string
-                //tempLine = tempLine.replaceAll("\\u00A0", "");
-
                 // Convert all characters to uppercase for easier processing
                 tempLine = tempLine.toUpperCase();
 
@@ -525,7 +509,6 @@ public class Lab3 {
             e.printStackTrace();
         }
 
-        //System.out.println(clearText.toString());
         return clearText;
     }
 
@@ -564,7 +547,7 @@ public class Lab3 {
 
                 // TODO improve this logic, if there's time
                 // Try-catch block to handle weird ñ character that causes the split to behave unpredictably
-                // This was residual from when the IDE was interpreting the input file as UTF-8
+                // This was residual from when the IDE was interpreting the input file as UTF-8; may no longer be needed
                 try {
                     // Strip off EOL character by replacing any non-numeric characters from frequency value
                     String tempFreq = tempLineArray[1].replaceAll("[\\D]", "");
@@ -586,9 +569,6 @@ public class Lab3 {
                 // Store tempFreqTreeNode into array
                 freqTable[i] = tempFreqTreeNode;
                 i++;
-
-                // TODO remove temp print freqtable entry
-                //System.out.println(tempFreqTreeNode.toString());
 
             }
             freqTableScanner.close();

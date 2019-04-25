@@ -3,7 +3,6 @@
  * are intended to be used in an array of similar objects to store the frequency table.
  *
  * @author Skyler Carlson
- * @version 1.0
  * @since 2019-04-19
  */
 public class FreqTreeNode implements Comparable<FreqTreeNode> {
@@ -83,7 +82,6 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
         return this.right;
     }
 
-
     /**
      * The setter method for the left node.
      * @param left      The left node to be assigned.
@@ -91,7 +89,6 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
     public void setLeft(FreqTreeNode left) {
         this.left = left;
     }
-
 
     /**
      * The setter method for hte right node.
@@ -157,24 +154,10 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
      */
     @Override
     public int compareTo(FreqTreeNode node) {
-      // TODO revert this back to original
-      //int temp Integer.compare();
+        // IDE suggested this as a replacement for the below, but unsure if this was allowed
+        // return Integer.compare(this.getFrequency(), node.getFrequency());
 
-        return Integer.compare(this.getFrequency(), node.getFrequency());
-
-
-      /**
-      // Tie breaker for the compareTo, so there is a secondary sort order (not just frequency values)
-      if (this.getFrequency() == node.getFrequency()) {
-        if (this.getHuffmanSequence().compareTo(node.getHuffmanSequence()) < 0) {
-          return -1;
-        }
-        else {
-          return 1;
-        }
-
-      }
-      else if (this.getFrequency() > node.getFrequency()) {
+      if (this.getFrequency() > node.getFrequency()) {
         return 1;
       }
       else if (this.getFrequency() < node.getFrequency()) {
@@ -182,8 +165,7 @@ public class FreqTreeNode implements Comparable<FreqTreeNode> {
       }
       else {
         return 0;
-      } **/
-
+      }
     }
 
   /**
