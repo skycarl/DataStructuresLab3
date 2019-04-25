@@ -16,7 +16,7 @@ public class Lab3 {
     /**
      * Main driver methods for the program.
      *
-     * @param args Passed in with runtime arguments; file names for frequency
+     * @param args          Passed in with runtime arguments; file names for frequency
      * table, clear text, encoded files, and output file
      */
     public static void main(String[] args) {
@@ -61,6 +61,7 @@ public class Lab3 {
         }
 
         // Split encodedText on \u00A0 character to put into an array
+        // TODO make this more robust; this character isn't present for UTF-8 encoded files
         String[] clearTextArray = clearText.toString().split("\\u00A0");
 
         // Read in the encoded file
@@ -72,6 +73,7 @@ public class Lab3 {
         }
 
         // Split encodedText on \u00A0 character to put into an array
+        // TODO make this more robust; this character isn't present for UTF-8 encoded files
         String[] encodedArray = encodedText.toString().split("\\u00A0");
 
         // Create a priority queue of FreqTreeNode objects
@@ -131,9 +133,11 @@ public class Lab3 {
      * This method traverses the Huffman tree to decode a string of encoded
      * data.
      *
-     * @param node The node at which the start of the traversal is happening.
-     * @param coded The encoded string of data.
-     * @return decoded  A StringBuilder object that contains decoded data.
+     * @param node          The node at which the start of the traversal is happening.
+     * @param coded         The encoded string of data.
+     * @param freqLookup    The Frequency table lookup.
+     * @param outputFile    The File to which it should be written.
+     * @return decoded      A StringBuilder object that contains decoded data.
      */
     private static StringBuilder decodeHuffman(FreqTreeNode node,
         String coded, FreqTreeNode[] freqLookup, File outputFile) {
@@ -177,9 +181,11 @@ public class Lab3 {
      * This method traverses the Huffman tree to find the code for a specific
      * character.
      *
-     * @param node The root node.
-     * @param coded The encoded array to be decoded via the tree.
-     * @return Returns the decoded array.
+     * @param node          The root node.
+     * @param coded         The encoded array to be decoded via the tree.
+     * @param counter       An index that helps with the traversal.
+     * @param charString    The character for which we are searching.
+     * @return              Returns the decoded array.
      */
     private static String traverseHuffmanToDecode(FreqTreeNode node,
         String coded, int counter, String charString)
@@ -217,8 +223,8 @@ public class Lab3 {
      * This method prints each leaf node and the Huffman code associated with
      * it.
      *
-     * @param freqTable The frequency table.
-     * @param outputFile The file object to be written to.
+     * @param freqTable         The frequency table.
+     * @param outputFile        The file object to be written to.
      */
     private static void printFreqTable(FreqTreeNode[] freqTable,
         File outputFile) {
@@ -238,8 +244,8 @@ public class Lab3 {
     /**
      * Simple method to print to the file
      *
-     * @param str String to be printed
-     * @param outputFile File object that is the output file
+     * @param str           String to be printed
+     * @param outputFile    File object that is the output file
      */
     private static void printStringToFile(String str, File outputFile) {
         try {
@@ -259,8 +265,8 @@ public class Lab3 {
     /**
      * This method prints a Huffman tree node to the file.
      *
-     * @param node The node to be printed.
-     * @param outputFile The file object to be written to.
+     * @param node              The node to be printed.
+     * @param outputFile        The file object to be written to.
      */
     private static void printNodeToFile(FreqTreeNode node, File outputFile) {
         try {
@@ -282,7 +288,7 @@ public class Lab3 {
     /**
      * This method deletes the previous file, if one exists of the same name.
      *
-     * @param filename The name of the output file, specified in runtime
+     * @param filename      The name of the output file, specified in runtime
      * parameters.
      */
     private static void deletePreviousFile(String filename) {
@@ -294,10 +300,10 @@ public class Lab3 {
      * This method accepts 2 arrays of StringBuilder objects and writes them
      * to file.
      *
-     * @param input A StringBuilder array containing the original text.
-     * @param output A StringBuilder array containing the encoded or decoded
+     * @param input         A StringBuilder array containing the original text.
+     * @param output        A StringBuilder array containing the encoded or decoded
      * text.
-     * @param outputFile The file to which the output should be written.
+     * @param outputFile    The file to which the output should be written.
      */
     private static void writeCodingToFile(String[] input,
         StringBuilder[] output, File outputFile) {
@@ -323,9 +329,9 @@ public class Lab3 {
     /**
      * This method takes clear text and encodes it as Huffman.
      *
-     * @param freqTable The frequency table.
-     * @param clear The clear text to be encoded.
-     * @return encoded      StringBuilder object containing the encoded string
+     * @param freqTable         The frequency table.
+     * @param clear             The clear text to be encoded.
+     * @return encoded          StringBuilder object containing the encoded string
      */
     private static StringBuilder encodeHuffman(FreqTreeNode[] freqTable,
         String clear) {
@@ -348,8 +354,8 @@ public class Lab3 {
     /**
      * This method traverses the Huffman tree and adds the Huffman codes to
      * each node.
-     *
-     * @param node The root node of the Huffman tree.
+     * @param encoded       The encoded text.
+     * @param node          The root node of the Huffman tree.
      */
     private static void addHuffmanCodes(FreqTreeNode node, String encoded) {
 
@@ -369,8 +375,8 @@ public class Lab3 {
     /**
      * This method traverses the Huffman tree and returns the structure of the
      * tree.
-     *
-     * @param huffmanTree The root node of the Huffman tree.
+     * @param outputFile        The file to which output will be written.
+     * @param huffmanTree       The root node of the Huffman tree.
      */
     private static void traverseHuffmanAndPrint(FreqTreeNode huffmanTree,
         File outputFile) {
@@ -395,8 +401,8 @@ public class Lab3 {
      * Builds the Huffman tree based on the priority queue passed from
      * main().
      *
-     * @param nodeQueue The priority queue containing frequency table data.
-     * @return The root node of the tree.
+     * @param nodeQueue     The priority queue containing frequency table data.
+     * @return              The root node of the tree.
      */
     private static FreqTreeNode buildHuffmanTree(
         PriorityQueue<FreqTreeNode> nodeQueue) {
@@ -430,10 +436,10 @@ public class Lab3 {
      * This breaks ties between two nodes and returns the temporary, combined
      * node.
      *
-     * @param smallestNode The smallest node removed from the Priority Queue.
-     * @param secondSmallestNode The second smallest node removed from the
+     * @param smallestNode          The smallest node removed from the Priority Queue.
+     * @param secondSmallestNode    The second smallest node removed from the
      * Priority Queue.
-     * @return The temporary, combined node of these 2 nodes.
+     * @return                      The temporary, combined node of these 2 nodes.
      */
     private static FreqTreeNode breakTies(FreqTreeNode smallestNode,
         FreqTreeNode secondSmallestNode) {
@@ -500,7 +506,7 @@ public class Lab3 {
     /**
      * This method imports the encoded text to a StringBuilder object.
      *
-     * @param encodedTextFilename The name of the file containing the encoded
+     * @param encodedTextFilename       The name of the file containing the encoded
      * text.
      * @return encodedText              A StringBuilder object containing the
      * encoded text, read from file.
@@ -575,7 +581,7 @@ public class Lab3 {
      * This method imports the frequency table and returns an array of String
      * objects that contain the frequency data.
      *
-     * @param filename The name of the file containing the frequency table.
+     * @param filename      The name of the file containing the frequency table.
      * @return freqTable    The frequency table, stored in an array of
      * Strings.
      */
