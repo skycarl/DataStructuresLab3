@@ -105,7 +105,7 @@ public class Lab3 {
 
         // Print the tree in preorder
         File outputFile = new File(outputFilename);
-        printStringToFile("\n\n---------Huffman tree in preorder---------\n",
+        printStringToFile("---------Huffman tree in preorder---------\n",
             outputFile);
         traverseHuffmanAndPrint(huffmanTree, outputFile);
 
