@@ -15,19 +15,26 @@ public class Lab3 {
 
     /**
      * Main driver methods for the program.
-     * @param args      Passed in with runtime arguments; file names for frequency table, clear text, and encoded files
+     * @param args      Passed in with runtime arguments; file names for frequency table, clear text, encoded files, and output file
      */
     public static void main(String[] args) {
 
+        String outputFilename = null;
+
         // Verify file names are specified
-        if (args.length != 3) {
+        if (args.length == 4) {
+            outputFilename = args[3];
+
+        }
+        else if (args.length == 3) { // Assume the user did not specify an output file name
+            outputFilename = "output.txt";
+        }
+        else {
             System.out.println(
                 "Error: insufficient runtime arguments. Enter file names for frequency table, clear text, and encoded files.");
             System.exit(1);
         }
 
-        // Assume that the output file will be named output.txt
-        String outputFilename = "output.txt"; // TODO check is this is legal or if user needs to specify
         deletePreviousFile(outputFilename);
 
         // Load file names into variables
