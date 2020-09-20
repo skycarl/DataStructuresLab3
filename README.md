@@ -17,8 +17,11 @@ The user must then specify input files containing clear text and Huffman-encoded
 Note: the input files give in this assignment were encoded as Windows-1252, so the program expects input files to be encoded as such. If unpredictable behavior occurs, ensure that the input files are Windows-1252 and that your IDE is set to recognize the encoding of the input files.
 
 The program may be compiled and run from the command line or terminal as such (note that the 4th parameter is optional):
+
+```
 javac Lab3.java
 java Lab3 FreqTable.txt ClearText.txt Encoded.txt output.txt
+```
 
 IDE: IntelliJ IDEA 2019.1 (Community Edition)
 JRE: 1.8.0_152-release-1343-b26 x86_64
